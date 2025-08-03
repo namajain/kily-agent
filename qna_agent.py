@@ -24,7 +24,7 @@ load_dotenv()
 
 # Initialize OpenAI client
 llm = ChatOpenAI(
-    model="gpt-4",
+            model="gpt-4.1",
     temperature=0,
     api_key=os.getenv("OPENAI_API_KEY")
 )

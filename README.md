@@ -5,11 +5,12 @@ A powerful QnA agent built with LangGraph that can download CSV files via API ca
 ## Features
 
 - 🔗 **CSV Download**: Download CSV files from URLs via API calls
-- 🤖 **LLM-Powered Analysis**: Uses GPT-4 to generate Python code based on natural language queries
+- 🤖 **LLM-Powered Analysis**: Uses GPT-4.1 to generate Python code based on natural language queries
 - 📊 **Dynamic Code Generation**: Creates analysis code on-the-fly using dataset summary and available packages
 - 💻 **Code Interpreter**: Execute custom Python code for advanced data analysis
 - 📈 **Visualization**: Generate plots and charts using matplotlib, seaborn, and plotly
 - 🔄 **Interactive Chat**: Real-time conversation interface
+- 📋 **Default Dataset**: Automatically loads `employees.csv` if available
 
 ## Installation
 
@@ -78,6 +79,7 @@ The web interface will open at `http://localhost:8501` and provides:
 - 💬 **Natural Language Queries**: Ask questions about your data
 - 📊 **Visual Results**: View generated visualizations and analysis results
 - 📁 **Artifacts**: All generated plots and files are saved to the `artifacts/` folder
+- 📋 **Default Dataset**: Automatically loads `employees.csv` if available in the downloads folder
 
 ### Interactive Demo
 
@@ -179,14 +181,14 @@ The agent uses LLM-powered code generation with the following components:
 
 ### Core Components
 - **Dataset Summary Generator**: Creates comprehensive dataset summaries for the LLM
-- **LLM Code Generator**: Uses GPT-4 to generate Python analysis code
+- **LLM Code Generator**: Uses GPT-4.1 to generate Python analysis code
 - **Code Executor**: Safely executes generated code with proper environment
 - **CSV Downloader**: Downloads CSV files from URLs
 
 ### Workflow
 1. **Download CSV**: Downloads CSV file from URL to `downloads/` folder
 2. **Create Summary**: Generates comprehensive dataset summary (columns, data types, sample data)
-3. **LLM Analysis**: Sends dataset summary + natural language query to GPT-4
+3. **LLM Analysis**: Sends dataset summary + natural language query to GPT-4.1
 4. **Code Generation**: LLM generates Python code to answer the query
 5. **Code Execution**: Executes generated code with pandas, numpy, matplotlib, etc.
 6. **Result Output**: Returns formatted analysis results

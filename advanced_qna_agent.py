@@ -23,7 +23,7 @@ if not api_key:
     llm = None
 else:
     llm = ChatOpenAI(
-        model="gpt-4",
+        model="gpt-4.1",
         temperature=0,
         api_key=api_key
     )
@@ -32,6 +32,11 @@ else:
 class AdvancedQnAAgent:
     def __init__(self):
         self.current_csv_file = None
+        
+        # Try to load employees.csv by default if it exists
+        employees_path = "downloads/employees.csv"
+        if os.path.exists(employees_path):
+            self.current_csv_file = employees_path
     
     def download_csv(self, url: str) -> str:
         """Download a CSV file from URL."""

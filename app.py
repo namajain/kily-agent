@@ -161,10 +161,14 @@ def main():
         with col2:
             st.header("📋 Status")
             
-            # Show current file
-            if agent.current_csv_file:
-                st.success("✅ File loaded")
-                st.write(f"**File:** {os.path.basename(agent.current_csv_file)}")
+                    # Show current file
+        if agent.current_csv_file:
+            st.success("✅ File loaded")
+            st.write(f"**File:** {os.path.basename(agent.current_csv_file)}")
+            
+            # Show special message for default employees.csv
+            if os.path.basename(agent.current_csv_file) == "employees.csv":
+                st.info("📋 Using default employees.csv dataset")
                 
                 # Show file info
                 try:
@@ -293,7 +297,7 @@ def main():
     st.markdown("---")
     st.markdown("""
     <div style='text-align: center; color: #666;'>
-        <p>🤖 Powered by GPT-4 | 📊 Built with Streamlit | 💻 LLM-Powered Code Generation</p>
+        <p>🤖 Powered by GPT-4.1 | 📊 Built with Streamlit | 💻 LLM-Powered Code Generation</p>
     </div>
     """, unsafe_allow_html=True)
 
