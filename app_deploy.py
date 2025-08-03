@@ -62,21 +62,31 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-def create_artifacts_folder():
-    """Create artifacts folder if it doesn't exist."""
-    artifacts_dir = "artifacts"
+def get_temp_dir():
+    """Get or create a temporary directory for file operations."""
+    if 'temp_dir' not in st.session_state:
+        st.session_state.temp_dir = tempfile.mkdtemp()
+    return st.session_state.temp_dir
+
+def create_temp_artifacts_folder():
+    """Create artifacts folder in temp directory."""
+    temp_dir = get_temp_dir()
+    artifacts_dir = os.path.join(temp_dir, "artifacts")
     os.makedirs(artifacts_dir, exist_ok=True)
     return artifacts_dir
 
 def initialize_agent():
-    """Initialize the QnA agent."""
+    """Initialize the QnA agent with temp directory."""
     if 'agent' not in st.session_state:
+        temp_dir = get_temp_dir()
         st.session_state.agent = AdvancedQnAAgent()
+        # Override the downloads directory to use temp
+        st.session_state.agent.downloads_dir = temp_dir
     return st.session_state.agent
 
 def display_generated_images():
-    """Display any generated images from the artifacts folder."""
-    artifacts_dir = create_artifacts_folder()
+    """Display any generated images from the temp artifacts folder."""
+    artifacts_dir = create_temp_artifacts_folder()
     image_files = glob.glob(os.path.join(artifacts_dir, "*.png")) + glob.glob(os.path.join(artifacts_dir, "*.jpg")) + glob.glob(os.path.join(artifacts_dir, "*.jpeg"))
     
     if image_files:
@@ -89,8 +99,8 @@ def display_generated_images():
             st.image(img_path, caption=img_name, use_container_width=True)
 
 def main():
-    # Create artifacts folder
-    create_artifacts_folder()
+    # Create temp artifacts folder
+    create_temp_artifacts_folder()
     
     # Header
     st.markdown('<h1 class="main-header">🤖 QnA Agent</h1>', unsafe_allow_html=True)
@@ -176,22 +186,6 @@ def main():
                     st.metric("Rows", df.shape[0])
                     st.metric("Columns", df.shape[1])
                     
-                    # Quick actions
-                    st.subheader("⚡ Quick Actions")
-                    col1, col2 = st.columns(2)
-                    
-                    with col1:
-                        if st.button("📊 Summary", use_container_width=True):
-                            with st.spinner("Generating summary..."):
-                                result = agent.analyze_data("show me a summary of the data")
-                                st.text(result)
-                    
-                    with col2:
-                        if st.button("📈 Visualize", use_container_width=True):
-                            with st.spinner("Creating visualization..."):
-                                result = agent.analyze_data("create a visualization of the data")
-                                st.text(result)
-                    
                     # Show sample data
                     with st.expander("📋 Sample Data"):
                         st.dataframe(df.head(), use_container_width=True)
@@ -217,9 +211,9 @@ def main():
             )
             
             if uploaded_file is not None:
-                # Save uploaded file to downloads folder
-                os.makedirs("downloads", exist_ok=True)
-                file_path = os.path.join("downloads", uploaded_file.name)
+                # Save uploaded file to temp directory
+                temp_dir = get_temp_dir()
+                file_path = os.path.join(temp_dir, uploaded_file.name)
                 
                 with open(file_path, "wb") as f:
                     f.write(uploaded_file.getbuffer())
@@ -254,9 +248,10 @@ def main():
                 else:
                     st.warning("Please enter a URL")
         
-        # Load existing files
+        # Load existing files from temp directory
         st.subheader("📂 Load Existing Files")
-        csv_files = glob.glob("downloads/*.csv")
+        temp_dir = get_temp_dir()
+        csv_files = glob.glob(os.path.join(temp_dir, "*.csv"))
         if csv_files:
             # Sort by modification time (newest first)
             csv_files.sort(key=os.path.getmtime, reverse=True)
@@ -274,7 +269,7 @@ def main():
                 except Exception as e:
                     st.error(f"Error loading file: {str(e)}")
         else:
-            st.info("No CSV files found in downloads folder")
+            st.info("No CSV files found in temporary directory")
     
     with tab3:
         # Info section
@@ -296,16 +291,15 @@ def main():
         
         with col2:
             st.subheader("📁 Folders")
-            artifacts_dir = create_artifacts_folder()
-            downloads_dir = "downloads"
-            os.makedirs(downloads_dir, exist_ok=True)
+            temp_dir = get_temp_dir()
+            artifacts_dir = create_temp_artifacts_folder()
             
-            st.write(f"**Downloads:** {downloads_dir}/")
+            st.write(f"**Temp Directory:** {temp_dir}/")
             st.write(f"**Artifacts:** {artifacts_dir}/")
             
             # Show file counts
-            csv_count = len(glob.glob("downloads/*.csv"))
-            artifact_count = len(glob.glob("artifacts/*"))
+            csv_count = len(glob.glob(os.path.join(temp_dir, "*.csv")))
+            artifact_count = len(glob.glob(os.path.join(artifacts_dir, "*")))
             st.metric("CSV Files", csv_count)
             st.metric("Artifacts", artifact_count)
     
