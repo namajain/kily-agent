@@ -172,6 +172,8 @@ example_analysis.png
 
 # Downloaded CSV files
 downloads/*.csv
+# Allow the default employees.csv dataset
+!downloads/employees.csv
 
 # Generated artifacts
 artifacts/*
