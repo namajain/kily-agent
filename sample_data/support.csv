@@ -1,0 +1,301 @@
+ticket_id,customer_id,issue_type,priority,status,created_date,resolution_time_hours
+1,489,Technical,High,In Progress,2024-05-07,48
+2,872,Technical,Low,In Progress,2024-05-01,21
+3,601,General,Critical,Closed,2024-09-03,33
+4,774,Technical,High,Closed,2024-07-04,56
+5,961,General,Low,Open,2024-07-26,29
+6,878,Billing,Critical,Resolved,2024-11-10,53
+7,464,Technical,Critical,In Progress,2024-10-30,40
+8,700,Billing,High,In Progress,2024-08-26,18
+9,624,Product,Medium,Closed,2024-08-02,47
+10,452,Billing,Medium,Closed,2024-10-18,13
+11,413,Product,Critical,In Progress,2024-08-11,27
+12,934,Billing,Critical,Resolved,2024-03-28,62
+13,751,Billing,Low,Open,2024-01-25,45
+14,476,Technical,Critical,Open,2024-08-07,3
+15,256,Billing,Low,Open,2024-10-01,22
+16,150,General,Low,Open,2024-05-14,27
+17,127,Technical,Low,Resolved,2024-08-20,55
+18,392,Technical,Critical,Resolved,2024-03-06,67
+19,831,Technical,Critical,Resolved,2024-03-20,33
+20,480,Billing,Low,Closed,2024-09-11,2
+21,993,Technical,High,In Progress,2024-05-04,46
+22,397,Product,Critical,Resolved,2024-05-25,33
+23,923,Product,Medium,Open,2024-04-12,58
+24,402,Billing,High,Resolved,2024-10-03,7
+25,274,Technical,Medium,In Progress,2024-05-03,15
+26,845,General,Critical,Closed,2024-09-23,26
+27,982,General,High,Open,2024-10-04,11
+28,958,Product,Critical,Closed,2024-04-20,38
+29,910,Billing,Critical,Resolved,2024-11-08,27
+30,139,Billing,High,Open,2024-03-29,7
+31,103,Billing,Critical,Open,2024-06-06,1
+32,242,Billing,High,Resolved,2024-08-03,21
+33,117,Billing,Critical,Resolved,2024-10-27,30
+34,214,Technical,Low,In Progress,2024-02-05,8
+35,484,Technical,Medium,Resolved,2024-03-27,3
+36,529,Technical,Low,Resolved,2024-04-27,55
+37,691,General,Critical,Resolved,2024-11-23,15
+38,224,Technical,Critical,Open,2024-06-30,36
+39,270,Billing,Critical,In Progress,2024-03-08,6
+40,825,Billing,Low,Open,2024-12-24,42
+41,861,General,Critical,Resolved,2024-06-07,50
+42,134,General,High,In Progress,2024-10-11,18
+43,114,Product,Medium,Resolved,2024-06-12,50
+44,441,General,Critical,Open,2024-12-26,30
+45,644,Product,Critical,Open,2024-03-13,39
+46,651,Technical,Medium,Resolved,2024-04-28,12
+47,365,Billing,Medium,In Progress,2024-12-06,59
+48,232,Product,Medium,Open,2024-07-13,44
+49,458,Product,Low,Resolved,2024-03-29,4
+50,375,Product,Low,Closed,2024-12-10,36
+51,604,General,Critical,Resolved,2024-03-16,48
+52,779,General,Medium,Resolved,2024-08-08,14
+53,611,General,Critical,In Progress,2024-05-18,49
+54,207,Product,Critical,Resolved,2024-08-28,67
+55,520,Technical,Critical,Closed,2024-06-02,9
+56,468,Billing,Low,Resolved,2024-02-22,21
+57,882,General,Medium,Closed,2024-05-21,16
+58,443,Technical,Critical,Open,2024-11-15,16
+59,917,General,Low,Resolved,2024-01-31,28
+60,321,General,High,In Progress,2024-08-10,51
+61,93,Product,High,Resolved,2024-10-18,56
+62,408,Product,Critical,Closed,2024-09-22,57
+63,158,General,Critical,Closed,2024-10-08,52
+64,872,Billing,Medium,In Progress,2024-10-02,46
+65,99,General,Medium,Closed,2024-02-13,38
+66,225,Billing,Critical,Resolved,2024-03-02,48
+67,852,Technical,Low,Closed,2024-07-19,41
+68,441,General,Critical,Resolved,2024-11-30,59
+69,720,Billing,Medium,Resolved,2024-01-09,67
+70,585,Technical,Medium,Closed,2024-03-11,66
+71,991,Technical,Low,In Progress,2024-03-30,27
+72,401,Product,Critical,Open,2024-01-24,32
+73,571,Technical,Medium,In Progress,2024-05-19,56
+74,799,Product,Critical,Open,2024-11-11,10
+75,64,Technical,Medium,In Progress,2024-12-05,40
+76,768,Technical,High,Resolved,2024-03-18,17
+77,560,Billing,High,Resolved,2024-08-01,58
+78,279,Billing,High,Closed,2024-01-16,6
+79,710,Product,Medium,Open,2024-01-29,39
+80,670,General,Low,Open,2024-10-17,18
+81,823,Billing,High,Closed,2024-02-12,42
+82,519,Technical,Medium,In Progress,2024-12-17,4
+83,248,Product,Critical,Closed,2024-02-22,20
+84,368,Product,High,In Progress,2024-10-02,28
+85,744,Product,Low,Closed,2024-08-19,40
+86,618,Technical,Low,Open,2024-07-30,65
+87,971,Billing,Low,Open,2024-01-08,44
+88,98,General,Critical,In Progress,2024-05-01,23
+89,268,Product,Critical,Open,2024-02-11,57
+90,60,Technical,Low,Open,2024-11-28,47
+91,500,Billing,Low,Open,2024-08-20,13
+92,308,Billing,Low,Open,2024-03-10,16
+93,493,General,Critical,Resolved,2024-01-16,55
+94,411,Product,Critical,Closed,2024-03-09,65
+95,140,Technical,Medium,Closed,2024-02-22,16
+96,909,Billing,High,Resolved,2024-06-21,37
+97,328,Technical,Critical,Open,2024-09-18,52
+98,464,Billing,Low,Closed,2024-10-15,10
+99,702,Product,High,Closed,2024-01-15,38
+100,637,Product,Critical,Closed,2024-09-26,44
+101,925,General,High,In Progress,2024-06-15,54
+102,163,Billing,Medium,Resolved,2024-03-03,51
+103,60,Technical,Critical,In Progress,2024-09-17,52
+104,925,Billing,Low,In Progress,2024-04-30,70
+105,31,Technical,Low,Resolved,2024-12-11,59
+106,333,General,Medium,Closed,2024-08-27,13
+107,76,Billing,Medium,In Progress,2024-04-16,41
+108,755,Product,Medium,Closed,2024-06-28,12
+109,317,Technical,Medium,In Progress,2024-01-16,50
+110,770,Product,Medium,Closed,2024-12-20,57
+111,417,General,Critical,Open,2024-11-04,50
+112,968,General,Critical,Open,2024-08-02,57
+113,190,Technical,High,Open,2024-03-17,54
+114,489,Billing,Medium,Resolved,2024-08-12,66
+115,889,Product,Low,Open,2024-04-02,8
+116,315,Product,Low,In Progress,2024-06-29,63
+117,296,Technical,Medium,Closed,2024-06-22,9
+118,501,Technical,Medium,Closed,2024-12-19,60
+119,177,Technical,Medium,Closed,2024-12-19,63
+120,800,General,Medium,Closed,2024-08-06,3
+121,806,General,Medium,In Progress,2024-05-22,13
+122,860,Product,Low,Closed,2024-11-10,9
+123,719,Billing,High,In Progress,2024-10-08,52
+124,215,Technical,Medium,In Progress,2024-09-15,62
+125,856,General,Medium,Closed,2024-12-21,8
+126,653,Billing,Medium,Closed,2024-02-16,45
+127,597,Technical,Critical,Closed,2024-01-05,53
+128,694,Billing,Low,In Progress,2024-03-02,63
+129,332,Technical,Low,Resolved,2024-03-24,57
+130,128,Billing,High,In Progress,2024-05-12,54
+131,269,Product,Critical,Resolved,2024-12-01,19
+132,551,Technical,Critical,Closed,2024-03-03,67
+133,535,Technical,Critical,In Progress,2024-10-07,46
+134,754,Product,High,Closed,2024-02-13,10
+135,366,Technical,High,Resolved,2024-06-01,18
+136,619,Technical,High,Resolved,2024-09-26,12
+137,348,General,Critical,In Progress,2024-12-07,49
+138,142,Product,Low,In Progress,2024-06-19,23
+139,145,General,Critical,In Progress,2024-06-04,62
+140,792,Product,High,In Progress,2024-10-01,11
+141,245,Billing,Critical,Open,2024-12-23,56
+142,442,Product,Medium,Open,2024-01-20,55
+143,703,Product,Critical,Closed,2024-08-01,25
+144,290,General,Critical,Resolved,2024-03-19,9
+145,691,Technical,Low,Resolved,2024-05-18,12
+146,112,Product,Low,Closed,2024-04-07,11
+147,214,Technical,Low,Closed,2024-05-31,38
+148,650,Product,Medium,Closed,2024-07-16,28
+149,886,General,Low,Open,2024-09-29,8
+150,200,Product,Medium,Closed,2024-06-04,47
+151,405,Billing,High,Resolved,2024-02-19,36
+152,421,Product,Low,Closed,2024-08-15,50
+153,7,Product,Critical,In Progress,2024-01-10,9
+154,858,Technical,Critical,Resolved,2024-05-28,60
+155,525,Technical,Medium,Resolved,2024-02-27,67
+156,592,Billing,Low,Resolved,2024-06-10,53
+157,286,Product,Critical,Open,2024-12-16,17
+158,671,Technical,High,Open,2024-04-16,53
+159,389,Product,Low,Resolved,2024-10-15,28
+160,416,General,High,In Progress,2024-07-04,63
+161,784,General,Critical,Resolved,2024-02-15,15
+162,713,Billing,Low,Open,2024-05-08,19
+163,150,General,Medium,In Progress,2024-11-13,70
+164,960,Technical,Critical,Resolved,2024-03-27,47
+165,428,Technical,High,Open,2024-09-05,71
+166,808,Billing,Low,In Progress,2024-11-24,48
+167,293,Product,High,Closed,2024-09-13,20
+168,334,Technical,High,Closed,2024-10-03,37
+169,272,General,Medium,Resolved,2024-10-04,2
+170,43,Technical,Medium,Closed,2024-01-04,64
+171,468,Billing,Critical,Open,2024-03-05,36
+172,319,General,Medium,In Progress,2024-07-20,5
+173,492,General,Medium,Resolved,2024-03-03,64
+174,527,General,Critical,In Progress,2024-05-22,7
+175,760,Billing,Critical,In Progress,2024-08-31,70
+176,172,Billing,Critical,In Progress,2024-10-18,22
+177,730,Product,Critical,Open,2024-10-11,46
+178,649,Product,High,Resolved,2024-06-28,40
+179,321,Product,High,Closed,2024-06-22,61
+180,739,Billing,Critical,In Progress,2024-11-20,46
+181,44,General,Critical,In Progress,2024-04-20,28
+182,532,General,Low,In Progress,2024-06-23,35
+183,631,Technical,Low,Open,2024-06-01,1
+184,454,Product,Low,Closed,2024-12-21,29
+185,746,General,Medium,In Progress,2024-08-04,9
+186,970,General,High,Open,2024-10-23,9
+187,880,General,High,Open,2024-08-27,22
+188,891,General,Low,In Progress,2024-08-13,63
+189,929,Billing,Low,In Progress,2024-07-04,66
+190,848,Product,High,Open,2024-02-17,58
+191,868,General,Medium,Open,2024-07-26,70
+192,774,General,Low,In Progress,2024-06-05,55
+193,83,General,Critical,Open,2024-08-12,13
+194,543,General,Low,Open,2024-05-23,19
+195,322,Technical,High,In Progress,2024-04-20,33
+196,786,General,High,In Progress,2024-11-13,65
+197,234,General,Low,Resolved,2024-12-28,60
+198,540,General,Low,Closed,2024-12-27,12
+199,252,Technical,Critical,In Progress,2024-05-11,43
+200,836,Billing,Critical,In Progress,2024-04-22,17
+201,765,Technical,Medium,In Progress,2024-11-19,68
+202,449,General,Medium,Closed,2024-03-29,29
+203,239,Billing,Critical,Resolved,2024-06-09,55
+204,490,General,Medium,Open,2024-11-29,7
+205,882,Billing,Medium,Closed,2024-03-15,44
+206,464,General,Low,In Progress,2024-10-07,5
+207,941,General,Critical,In Progress,2024-01-07,60
+208,314,Billing,Low,Resolved,2024-04-22,6
+209,175,Billing,Low,Resolved,2024-02-05,7
+210,706,General,Medium,Resolved,2024-09-22,46
+211,180,Technical,Low,Open,2024-04-22,57
+212,932,Technical,High,Closed,2024-10-18,54
+213,385,Technical,Medium,Closed,2024-08-10,46
+214,295,Technical,High,Resolved,2024-07-29,10
+215,215,Billing,Medium,Open,2024-01-18,4
+216,986,Billing,Low,Closed,2024-08-28,67
+217,715,Technical,Medium,In Progress,2024-05-13,25
+218,762,Product,High,In Progress,2024-08-07,61
+219,874,Product,Medium,In Progress,2024-04-11,38
+220,769,Product,High,Closed,2024-05-19,32
+221,75,General,Critical,Resolved,2024-06-17,23
+222,344,Technical,Low,In Progress,2024-07-09,37
+223,714,General,High,Resolved,2024-01-25,3
+224,142,Billing,Critical,Open,2024-02-02,13
+225,718,Billing,Low,In Progress,2024-12-08,34
+226,199,Product,Critical,Open,2024-11-24,65
+227,919,Product,High,Resolved,2024-01-06,8
+228,171,Billing,Low,Closed,2024-07-12,9
+229,406,Product,Critical,Resolved,2024-08-17,28
+230,828,Product,High,In Progress,2024-05-16,18
+231,228,Billing,Critical,In Progress,2024-11-18,42
+232,411,General,Low,Resolved,2024-08-03,41
+233,952,Product,Low,In Progress,2024-12-14,70
+234,898,General,Low,In Progress,2024-12-29,33
+235,935,Product,High,Open,2024-07-01,54
+236,691,Technical,Critical,Closed,2024-06-16,36
+237,878,General,Critical,Resolved,2024-10-08,56
+238,787,General,High,Open,2024-02-07,17
+239,62,Product,Low,In Progress,2024-06-11,10
+240,327,General,Medium,Open,2024-05-21,44
+241,716,Technical,Low,Closed,2024-09-04,2
+242,963,Billing,Medium,Resolved,2024-04-12,14
+243,959,Technical,Low,Closed,2024-07-17,41
+244,879,Billing,High,Closed,2024-07-18,2
+245,133,Technical,Medium,Open,2024-02-11,19
+246,584,Technical,High,Open,2024-05-26,1
+247,590,General,Medium,Closed,2024-03-06,2
+248,189,Technical,Critical,In Progress,2024-07-11,27
+249,356,Product,Medium,Resolved,2024-10-24,2
+250,71,Product,Medium,In Progress,2024-02-07,51
+251,263,Product,Medium,In Progress,2024-05-20,10
+252,306,Product,Critical,Resolved,2024-04-15,19
+253,558,General,High,Open,2024-05-31,13
+254,224,Product,Critical,In Progress,2024-12-17,48
+255,328,Technical,Medium,Open,2024-11-21,56
+256,762,Product,Low,Resolved,2024-02-07,56
+257,588,General,Critical,In Progress,2024-04-06,50
+258,74,Billing,Low,Open,2024-04-17,45
+259,511,Technical,Critical,Open,2024-04-28,59
+260,142,Technical,Critical,In Progress,2024-05-30,39
+261,585,General,Medium,Resolved,2024-03-14,21
+262,102,Billing,High,Closed,2024-02-26,55
+263,606,Product,High,Open,2024-12-31,57
+264,581,Billing,Medium,Resolved,2024-11-30,41
+265,65,Technical,Critical,In Progress,2024-09-08,70
+266,193,Technical,High,Open,2024-10-18,49
+267,953,Technical,High,Open,2024-11-08,44
+268,62,Billing,High,Open,2024-09-11,35
+269,532,Product,Medium,Resolved,2024-09-10,5
+270,241,Technical,Low,Open,2024-09-15,71
+271,715,General,Low,Open,2024-09-26,51
+272,410,Product,Low,In Progress,2024-02-03,57
+273,300,Technical,Low,Open,2024-11-21,58
+274,195,Product,Low,Resolved,2024-11-20,36
+275,454,General,High,In Progress,2024-08-25,10
+276,574,Billing,High,Closed,2024-06-27,50
+277,619,Technical,Critical,In Progress,2024-04-13,37
+278,637,General,High,Open,2024-01-29,20
+279,301,Technical,Medium,Closed,2024-08-14,13
+280,779,Technical,Critical,In Progress,2024-08-19,19
+281,456,Billing,High,Open,2024-10-30,56
+282,989,Billing,Critical,In Progress,2024-12-15,45
+283,202,Product,Critical,Resolved,2024-11-30,60
+284,674,General,Low,Open,2024-04-26,68
+285,856,General,Critical,Resolved,2024-07-25,57
+286,302,Billing,High,Open,2024-07-03,54
+287,624,Technical,Low,Resolved,2024-05-17,37
+288,337,Product,High,Closed,2024-11-18,37
+289,32,Billing,Low,Resolved,2024-06-12,14
+290,971,Product,High,In Progress,2024-03-15,44
+291,98,Product,Low,Open,2024-08-20,42
+292,984,General,Low,In Progress,2024-10-10,1
+293,759,Product,Medium,Resolved,2024-09-11,23
+294,773,General,High,Open,2024-01-09,64
+295,191,Technical,Critical,Resolved,2024-07-21,28
+296,541,Technical,Low,Closed,2024-10-31,4
+297,48,Billing,High,Closed,2024-03-31,41
+298,250,Technical,Low,Closed,2024-11-27,60
+299,226,General,Medium,Resolved,2024-05-29,18
+300,272,Product,Medium,Resolved,2024-12-25,63

@@ -1,294 +1,475 @@
-# QnA Agent with CSV Download & Code Interpreter
+# Enhanced QnA Agent System - MVP
 
-A powerful QnA agent built with LangGraph that can download CSV files via API calls and run code interpreter to answer questions about the data.
+## Overview
+
+This is the MVP (Minimum Viable Product) implementation of the Enhanced QnA Agent System. It provides a real-time, profile-based data analysis platform with natural language query processing.
 
 ## Features
 
-- 🔗 **CSV Download**: Download CSV files from URLs via API calls
-- 🤖 **LLM-Powered Analysis**: Uses GPT-4.1 to generate Python code based on natural language queries
-- 📊 **Dynamic Code Generation**: Creates analysis code on-the-fly using dataset summary and available packages
-- 💻 **Code Interpreter**: Execute custom Python code for advanced data analysis
-- 📈 **Visualization**: Generate plots and charts using matplotlib, seaborn, and plotly
-- 🔄 **Interactive Chat**: Real-time conversation interface
-- 📋 **Default Dataset**: Automatically loads `employees.csv` if available
+### ✅ MVP Features
+- **Profile-based Context Management**: On-demand file downloads for specific profiles
+- **Session Management**: 15-minute timeout sessions with profile context
+- **Real-time Communication**: Socket.IO backend with Streamlit frontend
+- **Natural Language Analysis**: LLM-powered query processing
+- **Database Integration**: PostgreSQL for persistent storage
+- **File Organization**: Date-based file structure (`downloads/YYYY-MM-DD/profile_id/`)
 
-## Installation
+### 🔄 Workflow
+1. User selects a profile from the frontend
+2. Backend creates session and downloads context files (if needed)
+3. User asks questions in natural language
+4. QnA agent analyzes data using profile context
+5. Results are streamed back in real-time
 
-### Using uv (Recommended)
+## Architecture Vision
 
-1. **Install uv** (if not already installed):
-   ```bash
-   curl -LsSf https://astral.sh/uv/install.sh | sh
-   ```
-
-2. **Clone the repository**:
-   ```bash
-   git clone <repository-url>
-   cd kily-agent
-   ```
-
-3. **Install dependencies with uv**:
-   ```bash
-   uv sync
-   ```
-
-4. **Set up environment variables**:
-   Create a `.env` file in the project root:
-   ```bash
-   # .env
-   OPENAI_API_KEY=your-openai-api-key-here
-   ```
-
-### Using pip (Alternative)
-
-1. **Clone the repository**:
-   ```bash
-   git clone <repository-url>
-   cd kily-agent
-   ```
-
-2. **Install dependencies**:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. **Set up environment variables**:
-   Create a `.env` file in the project root:
-   ```bash
-   # .env
-   OPENAI_API_KEY=your-openai-api-key-here
-   ```
-
-## Usage
-
-### Web Interface (Recommended)
-
-Launch the Streamlit web application:
-```bash
-# Using uv
-uv run streamlit run app.py
-
-# Or using pip
-streamlit run app.py
+```┌─────────────────────────────────────────────────────────────────────────────┐
+│                              CLIENT LAYER                                   │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────────────┐  │
+│  │   Streamlit     │    │   Web Client    │    │     Mobile Client       │  │
+│  │   Frontend      │    │   (React/Vue)   │    │                         │  │
+│  └─────────────────┘    └─────────────────┘    └─────────────────────────┘  │
+└─────────────────────────────────────────────────────────────────────────────┘
+                                    │
+                                    │ WebSocket/Socket.IO
+                                    ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           COMMUNICATION LAYER                               │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  ┌────────────────────────────────────────────────────────────────────────┐ │
+│  │                    Socket.IO Server (Backend)                          │ │
+│  │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐    │ │
+│  │  │   Auth      │  │   Cache     │  │   Chat      │  │   File      │    │ │
+│  │  │  Manager    │  │  Manager    │  │  Manager    │  │  Manager    │    │ │
+│  │  └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘    │ │
+│  └────────────────────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────────────────────┘
+                                    │
+                                    │ Internal API Calls
+                                    ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                            BUSINESS LOGIC LAYER                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────────────┐  │
+│  │   Context       │    │   Session       │    │      QnA Agent          │  │
+│  │   Manager       │    │   Manager       │    │                         │  │
+│  └─────────────────┘    └─────────────────┘    └─────────────────────────┘  │
+└─────────────────────────────────────────────────────────────────────────────┘
+                                    │
+                                    │ Data Access
+                                    ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                             DATA LAYER                                      │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────────────┐  │
+│  │   File System   │    │   Database      │    │     Cache (Redis)       │  │
+│  │   (Downloads)   │    │   (PostgreSQL)  │    │                         │  │
+│  └─────────────────┘    └─────────────────┘    └─────────────────────────┘  │
+└─────────────────────────────────────────────────────────────────────────────┘
 ```
-
-The web interface will open at `http://localhost:8501` and provides:
-- 📤 **File Upload**: Upload CSV files directly
-- 🌐 **URL Download**: Download CSV files from URLs  
-- 📂 **File Management**: Load existing files from the downloads folder
-- 💬 **Natural Language Queries**: Ask questions about your data
-- 📊 **Visual Results**: View generated visualizations and analysis results
-- 📁 **Artifacts**: All generated plots and files are saved to the `artifacts/` folder
-- 📋 **Default Dataset**: Automatically loads `employees.csv` if available in the downloads folder
-
-### Interactive Demo
-
-Run the interactive demo:
-```bash
-# Using uv
-uv run python demo.py
-
-# Or using pip
-python demo.py
-```
-
-### Programmatic Usage
-
-```python
-from advanced_qna_agent import AdvancedQnAAgent
-
-# Initialize the agent
-agent = AdvancedQnAAgent()
-
-# Download and analyze a CSV file
-response = agent.chat("Download https://raw.githubusercontent.com/datasets/covid-19/master/data/countries-aggregated.csv")
-print(response)
-
-# Ask questions about the data
-response = agent.chat("Show me a summary of the data")
-print(response)
-
-# Run custom code
-response = agent.chat("""
-Run this code:
-```python
-import pandas as pd
-print("Dataset shape:", df.shape)
-print("Columns:", list(df.columns))
-print(df.head())
-```
-""")
-print(response)
-```
-
-### Running Tests
-
-```bash
-# Run all tests
-uv run python tests/run_tests.py
-
-# Run a specific test
-uv run python tests/run_tests.py test_agent.py
-
-# List all available tests
-uv run python tests/run_tests.py --list
-
-# Run individual test files
-uv run python tests/demo.py
-uv run python tests/example_usage.py
-uv run python tests/test_agent.py
-uv run python tests/test_llm_analysis.py
-uv run python tests/test_load_functionality.py
-
-# Or with pip
-python tests/run_tests.py
-python tests/demo.py
-python tests/example_usage.py
-```
-
-## Available Commands
-
-### Download CSV Files
-- `download https://example.com/data.csv`
-- `Download CSV from https://example.com/data.csv`
-
-### Load Existing Files
-- `load employees.csv` - Load a specific CSV file
-- `load csv` - Load the most recent CSV file
-- `list csv files` - List all available CSV files
-
-**Note**: CSV files are automatically saved to the `downloads/` folder in the workspace.
-
-### Data Analysis
-- `Show me a summary`
-- `Analyze the data`
-- `What are the data types?`
-- `Show missing values`
-- `Create a correlation matrix`
-
-### Visualization
-- `Create a plot`
-- `Visualize the data`
-- `Generate charts`
-
-### Code Interpreter
-- `Run this code: ```python\nprint(df.head())\n````
-- `Execute: ```python\nimport matplotlib.pyplot as plt\nplt.hist(df['column'])\nplt.show()\n````
 
 ## Architecture
 
-The agent uses LLM-powered code generation with the following components:
+The system is now split into three main components:
 
-### Core Components
-- **Dataset Summary Generator**: Creates comprehensive dataset summaries for the LLM
-- **LLM Code Generator**: Uses GPT-4.1 to generate Python analysis code
-- **Code Executor**: Safely executes generated code with proper environment
-- **CSV Downloader**: Downloads CSV files from URLs
+1. **Mock API Server** (`mock_api/`) - Handles all database operations via REST endpoints
+2. **Backend Server** (`backend/`) - Flask Socket.IO server that communicates with Mock API
+3. **Frontend** (`frontend/`) - Streamlit application that connects to the backend
 
-### Workflow
-1. **Download CSV**: Downloads CSV file from URL to `downloads/` folder
-2. **Create Summary**: Generates comprehensive dataset summary (columns, data types, sample data)
-3. **LLM Analysis**: Sends dataset summary + natural language query to GPT-4.1
-4. **Code Generation**: LLM generates Python code to answer the query
-5. **Code Execution**: Executes generated code with pandas, numpy, matplotlib, etc.
-6. **Result Output**: Returns formatted analysis results
+This separation provides:
+- **Clean separation of concerns** - Database logic is isolated
+- **Scalability** - Each component can be scaled independently
+- **Testability** - Each component can be tested in isolation
+- **Flexibility** - Easy to swap out database layer or add new APIs
 
-### Available Packages
-- `pandas` (pd): Data manipulation and analysis
-- `numpy` (np): Numerical computing
-- `matplotlib.pyplot` (plt): Basic plotting
-- `seaborn` (sns): Statistical plotting
-- `plotly.express` (px): Interactive plotting
-- `plotly.graph_objects` (go): Advanced plotting
+## Quick Start
 
-## Example Workflows
+### Prerequisites
+- Python 3.9+
+- PostgreSQL 13+ (see installation steps below)
+- OpenAI API key
+- uv (Python package manager)
 
-### Basic Analysis
-1. Download CSV from URL
-2. Load data into memory
-3. Generate summary statistics
-4. Create visualizations
+### PostgreSQL Installation
 
-### Advanced Analysis
-1. Download CSV from URL
-2. Load data into memory
-3. Execute custom Python code
-4. Generate custom visualizations
-5. Export results
+**On macOS (using Homebrew):**
+```bash
+# Install PostgreSQL
+brew install postgresql@15
+
+# Start PostgreSQL service
+brew services start postgresql@15
+
+# Add to PATH (add to ~/.zshrc or ~/.bash_profile)
+echo 'export PATH="/opt/homebrew/opt/postgresql@15/bin:$PATH"' >> ~/.zshrc
+source ~/.zshrc
+
+# Create database
+createdb qna_agent
+```
+
+**On other systems:**
+- Download from: https://www.postgresql.org/download/
+- Follow the installation wizard
+- Create a database named `qna_agent`
+
+### Install uv
+
+If you don't have uv installed, install it first:
+
+```bash
+# On macOS/Linux
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# On Windows
+powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
+
+# Or with pip
+pip install uv
+```
+
+### 1. Setup Environment
+
+**Option 1: Automated Setup (Recommended)**
+```bash
+# Clone and navigate to v1 directory
+cd v1
+
+# Run the automated setup script
+python3 scripts/setup_uv.py
+```
+
+**Option 2: Manual Setup**
+```bash
+# Clone and navigate to v1 directory
+cd v1
+
+# Create virtual environment and install dependencies
+uv sync
+
+# Activate the virtual environment
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+```
+
+### 2. Database Setup
+
+```bash
+# Create PostgreSQL database
+createdb qna_agent
+
+# Copy environment file
+cp env.example .env
+
+# Edit .env with your database credentials and OpenAI API key
+```
+
+### 3. Initialize Database
+
+```bash
+# Run database initialization
+uv run python3 -c "from database.config import init_database; init_database()"
+```
+
+### 4. Start the System
+
+**Option 1: Start All Services (Recommended)**
+```bash
+make run-all
+```
+
+**Option 2: Start Services Individually**
+
+**Terminal 1 - Mock API (Database Layer):**
+```bash
+make run-mock-api
+```
+
+**Terminal 2 - Backend (Socket.IO Server):**
+```bash
+make run-backend
+```
+
+**Terminal 3 - React Frontend (Modern Web App):**
+```bash
+make run-react
+```
+
+**Terminal 4 - Streamlit Frontend (Legacy):**
+```bash
+make run-frontend
+```
+
+### 5. Access the Application
+
+- **React Frontend**: http://localhost:3000 (Recommended)
+- **Streamlit Frontend**: http://localhost:8501 (Legacy)
+- **Backend Health**: http://localhost:5001/health
+- **Mock API Health**: http://localhost:5002/health
+
+## Usage
+
+### 1. Authentication
+- Enter your User ID (e.g., "user1")
+- Click "Load Profiles" to see available profiles
+
+### 2. Profile Selection
+- Select a profile from the sidebar
+- The system will automatically download context files for that profile
+
+### 3. Chat Interface
+- Ask questions about your data in natural language
+- View real-time responses and visualizations
+- Check context information in the right panel
+
+### 4. Example Queries
+```
+- "Show me a summary of the data"
+- "What are the data types?"
+- "Create a histogram of the values"
+- "Find correlations between variables"
+- "Show me the trends over time"
+```
 
 ## Project Structure
 
 ```
-kily-agent/
-├── advanced_qna_agent.py    # Main agent implementation
-├── app.py                  # Streamlit web application
-├── run_app.py              # Streamlit app launcher
-├── requirements.txt        # Python dependencies
-├── pyproject.toml         # Project configuration
-├── uv.lock               # Lock file for uv
-├── .env                  # Environment variables (create this)
-├── downloads/            # Downloaded CSV files
-├── artifacts/            # Generated plots and files
-├── tests/                # Test suite
-│   ├── __init__.py       # Test package initialization
-│   ├── conftest.py       # Pytest configuration
-│   ├── run_tests.py      # Test runner
-│   ├── README.md         # Test documentation
-│   ├── demo.py           # Interactive demo script
-│   ├── example_usage.py  # Programmatic usage examples
-│   ├── test_agent.py     # Basic agent tests
-│   ├── test_llm_analysis.py # LLM analysis tests
-│   └── test_load_functionality.py # File loading tests
-└── README.md            # This file
+├── backend/
+│   ├── agents/
+│   │   └── qna_agent.py          # QnA analysis engine
+│   ├── managers/
+│   │   ├── context_manager.py    # File download and caching
+│   │   └── session_manager.py    # Session lifecycle management
+│   ├── core/
+│   └── server.py                 # Socket.IO backend server
+├── frontend/
+│   └── app.py                    # Streamlit frontend (legacy)
+├── frontend-react/               # Modern React frontend
+│   ├── src/
+│   │   ├── components/           # React components
+│   │   ├── App.js               # Main React app
+│   │   └── index.js             # React entry point
+│   ├── package.json             # Node.js dependencies
+│   └── README.md                # React frontend docs
+├── mock_api/                    # Database API layer
+│   ├── server.py                # REST API server
+│   ├── models.py                # Data models
+│   └── database.py              # Database connection
+├── database/
+│   ├── config.py                # Database configuration
+│   └── schema.sql               # Database schema
+├── scripts/
+│   ├── start_backend.py         # Backend startup script
+│   ├── start_frontend.py        # Streamlit startup script
+│   ├── setup_uv.py              # Python setup script
+│   └── setup_react_frontend.py  # React setup script
+├── tests/                       # Test files
+├── pyproject.toml               # Python project configuration
+├── Makefile                     # Development convenience commands
+├── .gitignore                   # Git ignore patterns
+├── env.example                  # Environment variables template
+└── README.md                    # This file
 ```
 
-## Dependencies
+## Configuration
 
-### Core Dependencies
-- `langgraph`: Workflow management
-- `langchain`: LLM integration
-- `langchain-openai`: OpenAI integration
-- `pandas`: Data manipulation
-- `numpy`: Numerical computing
-- `matplotlib`: Basic plotting
-- `seaborn`: Statistical plotting
-- `plotly`: Interactive plotting
-- `requests`: HTTP requests
-- `python-dotenv`: Environment management
-- `streamlit`: Web application framework
+### Environment Variables
 
-### Development Dependencies
-- `pytest`: Testing framework
-- `black`: Code formatting
-- `flake8`: Linting
-- `mypy`: Type checking
+Create a `.env` file based on `env.example`:
 
-### Package Management
-This project uses `uv` for fast, reliable Python package management. The dependencies are defined in `pyproject.toml` and locked in `uv.lock`.
+```bash
+# Database Configuration
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=qna_agent
+DB_USER=postgres
+DB_PASSWORD=your_password
 
-## Security Considerations
+# OpenAI Configuration
+OPENAI_API_KEY=your_openai_api_key
 
-- The code interpreter runs in a controlled environment
-- Only safe libraries are available in the execution context
-- File operations are limited to temporary files
-- Network requests are restricted to CSV downloads
+# Server Configuration
+FLASK_ENV=development
+```
 
-## Error Handling
+### Database Schema
 
-The agent includes comprehensive error handling for:
-- Network errors during CSV download
-- File format errors
-- Code execution errors
-- Memory issues with large datasets
+The system uses the following main tables:
+- `users`: User accounts
+- `user_profiles`: Profile configurations with data sources
+- `chat_history`: Chat sessions
+- `chat_messages`: Individual messages
+- `context_files`: Download tracking
 
-## Contributing
+## API Reference
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
+### Socket.IO Events
+
+#### Client → Server
+- `authenticate`: User authentication
+- `start_chat`: Start chat session for profile
+- `send_message`: Send chat message
+- `get_chat_history`: Get session chat history
+- `get_user_profiles`: Get user's profiles
+- `get_context_summary`: Get data context summary
+- `end_session`: End chat session
+
+#### Server → Client
+- `connected`: Connection confirmation
+- `authenticated`: Authentication success
+- `auth_error`: Authentication failure
+- `chat_started`: Chat session created
+- `message_response`: Analysis response
+- `chat_history`: Chat history data
+- `user_profiles`: User profile list
+- `context_summary`: Context data summary
+- `error`: Error messages
+
+## Development
+
+### uv Commands
+
+The project uses `uv` for dependency management. Here are some useful commands:
+
+```bash
+# Install dependencies
+uv sync
+
+# Add a new dependency
+uv add package-name
+
+# Add a development dependency
+uv add --dev package-name
+
+# Remove a dependency
+uv remove package-name
+
+# Update dependencies
+uv lock --upgrade
+
+# Run a command in the virtual environment
+uv run python script.py
+
+# Activate the virtual environment
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+```
+
+### Makefile Commands
+
+For convenience, you can also use the provided Makefile:
+
+```bash
+# Show all available commands
+make help
+
+# Setup the project
+make setup
+
+# Install dependencies
+make install
+
+# Run tests
+make test
+
+# Start backend
+make run-backend
+
+# Start frontend
+make run-frontend
+
+# Format code
+make format
+
+# Run linting
+make lint
+
+# Clean up generated files
+make clean
+```
+
+### Running Tests
+```bash
+# Run all tests
+uv run pytest tests/
+
+# Run specific test file
+uv run pytest tests/test_qna_agent.py
+
+# Run with coverage
+uv run pytest tests/ --cov=backend --cov=frontend
+```
+
+### Code Structure
+
+#### Context Manager
+- Handles profile-based file downloads
+- Organizes files by date and profile
+- Tracks download status in database
+
+#### Session Manager
+- Manages 15-minute session timeouts
+- Stores chat history in memory and database
+- Handles session creation and cleanup
+
+#### QnA Agent
+- Generates Python code using LLM
+- Executes analysis in sandboxed environment
+- Creates visualizations and saves to artifacts
+
+#### Socket.IO Server
+- Handles real-time communication
+- Routes events to appropriate handlers
+- Manages authentication and sessions
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Database Connection Failed**
+   - Check PostgreSQL is running
+   - Verify database credentials in `.env`
+   - Ensure database `qna_agent` exists
+
+2. **OpenAI API Errors**
+   - Verify API key in `.env`
+   - Check API quota and billing
+   - Ensure internet connectivity
+
+3. **Socket.IO Connection Issues**
+   - Check backend is running on port 5000
+   - Verify CORS settings
+   - Check firewall settings
+
+4. **File Download Failures**
+   - Check internet connectivity
+   - Verify data source URLs in database
+   - Check file permissions in downloads directory
+
+### Logs
+
+Backend logs are available in the terminal where you started the backend server. Look for:
+- Connection events
+- Download progress
+- Analysis execution
+- Error messages
+
+## Next Steps (v2)
+
+The MVP will be enhanced in v2 with:
+- Scheduled daily downloads at 1 AM
+- Redis-based session persistence
+- Enhanced caching and performance
+- Advanced error handling
+- Multi-profile support per user
+
+## Support
+
+For issues and questions:
+1. Check the troubleshooting section
+2. Review the logs for error messages
+3. Verify all prerequisites are met
+4. Check the database schema and sample data
 
 ## License
 
-This project is licensed under the MIT License. 
+This project is part of the Enhanced QnA Agent System. 
