@@ -1,0 +1,6 @@
+---
+alwaysApply: true
+---
+- read all the md files in the project first to gain context
+- Don't edit gitignore files unless explicitly mentioned
+- If something needs to be edited in .env files, reply that as a pasteable output in the chat which a Human will edit after reviewing

@@ -49,9 +49,7 @@ run-backend: ## Start the backend server
 	@echo "Starting backend server..."
 	uv run python3 scripts/start_backend.py &
 
-run-frontend: ## Start the Streamlit frontend server
-	@echo "Starting Streamlit frontend server..."
-	uv run python3 scripts/start_frontend.py &
+
 
 run-react: ## Start the React frontend server
 	@echo "Starting React frontend server..."
@@ -80,7 +78,7 @@ stop-all: ## Stop all running services
 	@echo "Stopping all services..."
 	@pkill -f "python.*server.py" || true
 	@pkill -f "python.*start_backend.py" || true
-	@pkill -f "streamlit.*app.py" || true
+
 	@pkill -f "react-scripts" || true
 	@pkill -f "node.*react-scripts" || true
 	@echo "All services stopped"

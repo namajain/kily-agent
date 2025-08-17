@@ -34,7 +34,7 @@ The MVP (Minimum Viable Product) of the Enhanced QnA Agent System has been succe
 - ✅ Authentication and session management
 - ✅ Comprehensive error handling
 
-### 5. **Streamlit Frontend** (`frontend/app.py`)
+### 5. **React Frontend** (`frontend-react/`)
 - ✅ Real-time chat interface
 - ✅ Profile selection and management
 - ✅ Context information display
@@ -160,7 +160,7 @@ v1/
 │   │   ├── context_manager.py       # File management
 │   │   └── session_manager.py       # Session handling
 │   └── server.py                    # Socket.IO server
-├── frontend/app.py                  # Streamlit UI
+├── frontend-react/                  # React UI
 ├── database/
 │   ├── config.py                    # DB configuration
 │   └── schema.sql                   # Database schema
@@ -195,7 +195,7 @@ v1/
 - File organization
 
 ### ✅ **User Experience**
-- Intuitive Streamlit interface
+- Modern React interface
 - Profile selection workflow
 - Real-time responses
 - Context information display

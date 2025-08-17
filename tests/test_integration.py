@@ -212,26 +212,5 @@ class TestFullSystemIntegration(unittest.TestCase):
         except Exception as e:
             self.fail(f"Health endpoint test failed: {e}")
 
-class TestStreamlitFrontend(unittest.TestCase):
-    """Test Streamlit frontend functionality"""
-    
-    def test_frontend_import(self):
-        """Test that frontend can be imported"""
-        try:
-            from frontend.app import QnAFrontend
-            frontend = QnAFrontend()
-            self.assertIsNotNone(frontend)
-        except Exception as e:
-            self.fail(f"Frontend import failed: {e}")
-    
-    def test_frontend_initialization(self):
-        """Test frontend initialization"""
-        try:
-            from frontend.app import QnAFrontend
-            frontend = QnAFrontend(backend_url="http://localhost:5008")
-            self.assertEqual(frontend.backend_url, "http://localhost:5008")
-        except Exception as e:
-            self.fail(f"Frontend initialization failed: {e}")
-
 if __name__ == '__main__':
     unittest.main()

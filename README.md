@@ -9,7 +9,7 @@ This is the MVP (Minimum Viable Product) implementation of the Enhanced QnA Agen
 ### ✅ MVP Features
 - **Profile-based Context Management**: On-demand file downloads for specific profiles
 - **Session Management**: 15-minute timeout sessions with profile context
-- **Real-time Communication**: Socket.IO backend with Streamlit frontend
+- **Real-time Communication**: Socket.IO backend with React frontend
 - **Natural Language Analysis**: LLM-powered query processing
 - **Database Integration**: PostgreSQL for persistent storage
 - **File Organization**: Date-based file structure (`downloads/YYYY-MM-DD/profile_id/`)
@@ -27,8 +27,8 @@ This is the MVP (Minimum Viable Product) implementation of the Enhanced QnA Agen
 │                              CLIENT LAYER                                   │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │  ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────────────┐  │
-│  │   Streamlit     │    │   Web Client    │    │     Mobile Client       │  │
-│  │   Frontend      │    │   (React/Vue)   │    │                         │  │
+│  │   React         │    │   Web Client    │    │     Mobile Client       │  │
+│  │   Frontend      │    │   (Vue/Angular) │    │                         │  │
 │  └─────────────────┘    └─────────────────┘    └─────────────────────────┘  │
 └─────────────────────────────────────────────────────────────────────────────┘
                                     │
@@ -75,7 +75,7 @@ The system is now split into three main components:
 
 1. **Mock API Server** (`mock_api/`) - Handles all database operations via REST endpoints
 2. **Backend Server** (`backend/`) - Flask Socket.IO server that communicates with Mock API
-3. **Frontend** (`frontend/`) - Streamlit application that connects to the backend
+3. **Frontend** (`frontend-react/`) - React application that connects to the backend
 
 This separation provides:
 - **Clean separation of concerns** - Database logic is isolated
@@ -195,15 +195,11 @@ make run-backend
 make run-react
 ```
 
-**Terminal 4 - Streamlit Frontend (Legacy):**
-```bash
-make run-frontend
-```
+
 
 ### 5. Access the Application
 
-- **React Frontend**: http://localhost:3000 (Recommended)
-- **Streamlit Frontend**: http://localhost:8501 (Legacy)
+- **React Frontend**: http://localhost:3000
 - **Backend Health**: http://localhost:5001/health
 - **Mock API Health**: http://localhost:5002/health
 
@@ -240,10 +236,17 @@ make run-frontend
 │   ├── managers/
 │   │   ├── context_manager.py    # File download and caching
 │   │   └── session_manager.py    # Session lifecycle management
+│   ├── utils/
+│   │   └── prompt_manager.py     # LLM prompt management
 │   ├── core/
 │   └── server.py                 # Socket.IO backend server
-├── frontend/
-│   └── app.py                    # Streamlit frontend (legacy)
+├── prompts/                      # LLM prompt templates
+│   ├── analysis_code_generation.txt
+│   ├── conversational_response.txt
+│   ├── execution_history_context.txt
+│   ├── conversational_query_context.txt
+│   └── README.md                 # Prompt documentation
+
 ├── frontend-react/               # Modern React frontend
 │   ├── src/
 │   │   ├── components/           # React components
@@ -260,7 +263,6 @@ make run-frontend
 │   └── schema.sql               # Database schema
 ├── scripts/
 │   ├── start_backend.py         # Backend startup script
-│   ├── start_frontend.py        # Streamlit startup script
 │   ├── setup_uv.py              # Python setup script
 │   └── setup_react_frontend.py  # React setup script
 ├── tests/                       # Test files

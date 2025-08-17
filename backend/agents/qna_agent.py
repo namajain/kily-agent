@@ -18,6 +18,7 @@ import re
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
 from langchain.schema import HumanMessage, SystemMessage, AIMessage
+from ..utils.prompt_manager import PromptManager
 
 # Load environment variables
 load_dotenv()
@@ -38,6 +39,9 @@ class QnAAgent:
         )
         self.artifacts_dir = "artifacts"
         self._ensure_artifacts_directory()
+        
+        # Initialize prompt manager
+        self.prompt_manager = PromptManager()
     
     def _ensure_artifacts_directory(self):
         """Ensure artifacts directory exists"""
@@ -74,38 +78,41 @@ class QnAAgent:
             logger.error(f"Analysis failed: {e}")
             return f"Analysis failed: {str(e)}"
     
-    def _generate_analysis_code(self, query: str, context_data: Dict[str, pd.DataFrame], chat_history: List[Dict] = None) -> str:
+    def _generate_analysis_code(self, query: str, context_data: Dict[str, pd.DataFrame], chat_history: List[Dict] = None, execution_history: List[Dict] = None) -> str:
         """Generate Python code for analysis based on query and available data"""
         try:
             # Create context summary
             context_summary = self._create_context_summary(context_data)
             
-            # Create system prompt
-            system_prompt = f"""
-            You are a data analysis expert. Generate Python code to answer the user's query.
+            # Get dataframe names for the prompt
+            dataframe_names = [filename.replace('.csv', '_df') for filename in context_data.keys()]
             
-            Available datasets (variable names of the dataframes):
-            {context_summary}
+            # Get system prompt from prompt manager
+            system_prompt = self.prompt_manager.get_analysis_code_prompt(
+                context_summary=context_summary,
+                dataframe_names=dataframe_names
+            )
             
-            Available libraries: pandas (pd), numpy (np), matplotlib.pyplot (plt), seaborn (sns), plotly.express (px), plotly.graph_objects (go)
-            
-            Instructions:
-            1. Use the available dataframes with their exact variable names (including .csv extension)
-            2. DO NOT use pd.read_csv() - the dataframes are already loaded in memory
-            3. Generate clear, well-commented code
-            4. Include visualizations when appropriate
-            5. Return only the Python code, no explanations
-            6. Save plots to the artifacts directory if created
-            7. Make sure to print or return the results
-            8. Consider the conversation history when generating code - build on previous analysis if relevant
-            
-            CRITICAL: The dataframes are already loaded in memory with these variable names:
-            {[filename.replace('.csv', '_df') for filename in context_data.keys()]}
-            DO NOT use pd.read_csv() or any file reading functions - use the dataframes directly!
-            """
-            
-            # Build messages list with chat history
+            # Build messages list with chat history and execution history
             messages = [SystemMessage(content=system_prompt)]
+            
+            # Add execution history if available
+            if execution_history:
+                # Format execution history
+                history_text = ""
+                for i, attempt in enumerate(execution_history[-3:], 1):  # Keep last 3 attempts
+                    history_text += f"""
+                Attempt {attempt['iteration']}:
+                Code: {attempt['code'][:200]}...
+                Result: {attempt['result'][:200]}...
+                Status: {attempt['status']}
+                """
+                
+                history_context = self.prompt_manager.get_execution_history_context(
+                    attempt_count=len(execution_history),
+                    execution_history=history_text
+                )
+                messages.append(HumanMessage(content=history_context))
             
             # Add chat history if available
             if chat_history:
@@ -320,23 +327,10 @@ class QnAAgent:
             # Create context summary for the LLM
             context_summary = self._create_context_summary(context_data)
             
-            # Create system prompt for conversational response
-            system_prompt = f"""
-            You are a helpful data analyst assistant. Your job is to provide conversational, easy-to-understand responses about data analysis results.
-            
-            Available datasets:
-            {context_summary}
-            
-            Instructions:
-            1. Provide a conversational, friendly response that explains the analysis results
-            2. Use simple, clear language that a business user would understand
-            3. Include key insights and observations from the data
-            4. If there are visualizations or plots created, mention them
-            5. Keep the response concise but informative
-            6. Don't repeat the raw data output - explain what it means
-            7. Consider the conversation history to provide more contextual responses
-            8. Reference previous analysis when relevant to build on insights
-            """
+            # Get system prompt from prompt manager
+            system_prompt = self.prompt_manager.get_conversational_response_prompt(
+                context_summary=context_summary
+            )
             
             # Build messages list with chat history
             messages = [SystemMessage(content=system_prompt)]
@@ -350,14 +344,10 @@ class QnAAgent:
                         messages.append(AIMessage(content=message.get('content', '')))
             
             # Add current query and analysis result
-            current_prompt = f"""
-            User Query: {query}
-            
-            Analysis Result:
-            {analysis_result}
-            
-            Please provide a conversational response explaining these results in simple terms.
-            """
+            current_prompt = self.prompt_manager.get_conversational_query_context(
+                query=query,
+                analysis_result=analysis_result
+            )
             messages.append(HumanMessage(content=current_prompt))
             
             # Generate conversational response using LLM
@@ -368,4 +358,90 @@ class QnAAgent:
         except Exception as e:
             logger.error(f"Failed to generate conversational response: {e}")
             # Fallback to original result if conversational generation fails
-            return f"Here's what I found:\n\n{analysis_result}" 
+            return f"Here's what I found:\n\n{analysis_result}"
+    
+    def _execute_analysis_iterative(self, query: str, context_data: Dict[str, pd.DataFrame], chat_history: List[Dict] = None) -> str:
+        """Execute analysis with iterative refinement up to 5 attempts"""
+        max_iterations = 5
+        iteration = 0
+        execution_history = []
+        
+        while iteration < max_iterations:
+            iteration += 1
+            logger.info(f"Starting iteration {iteration}/{max_iterations}")
+            
+            try:
+                # Generate analysis code
+                analysis_code = self._generate_analysis_code(query, context_data, chat_history, execution_history)
+                
+                # Execute the code
+                result = self._execute_analysis(analysis_code, context_data)
+                
+                # Check if we have a complete answer
+                is_complete = self._check_completion(query, result, execution_history)
+                
+                if is_complete:
+                    logger.info(f"Analysis completed successfully in iteration {iteration}")
+                    return result
+                else:
+                    logger.info(f"Iteration {iteration} incomplete, continuing...")
+                    execution_history.append({
+                        'iteration': iteration,
+                        'code': analysis_code,
+                        'result': result,
+                        'status': 'incomplete'
+                    })
+                    
+            except Exception as e:
+                logger.warning(f"Error in iteration {iteration}: {e}")
+                execution_history.append({
+                    'iteration': iteration,
+                    'code': analysis_code if 'analysis_code' in locals() else 'N/A',
+                    'result': f"Error: {str(e)}",
+                    'status': 'error'
+                })
+        
+        # If we reach here, return the best result we have
+        logger.warning(f"Reached maximum iterations ({max_iterations}), returning best available result")
+        if execution_history:
+            return execution_history[-1]['result']
+        else:
+            return "Analysis failed after maximum iterations"
+    
+    def _check_completion(self, query: str, result: str, execution_history: List[Dict]) -> bool:
+        """Check if the analysis result is complete and answers the query"""
+        try:
+            # Create a simple prompt to check completion
+            check_prompt = f"""
+            You are an expert data analyst. Check if the following analysis result completely answers the user's query.
+            
+            User Query: {query}
+            
+            Analysis Result:
+            {result}
+            
+            Execution History: {len(execution_history)} previous attempts
+            
+            Determine if this result:
+            1. Provides a direct answer to the query
+            2. Contains meaningful data/insights
+            3. Is not just an error message
+            4. Would satisfy the user's question
+            
+            Respond with ONLY "COMPLETE" or "INCOMPLETE" followed by a brief reason.
+            """
+            
+            response = self.llm.invoke([
+                SystemMessage(content="You are a completion checker. Respond with only 'COMPLETE' or 'INCOMPLETE' followed by a brief reason."),
+                HumanMessage(content=check_prompt)
+            ])
+            
+            response_text = response.content.strip().upper()
+            logger.info(f"Completion check result: {response_text}")
+            
+            return response_text.startswith("COMPLETE")
+            
+        except Exception as e:
+            logger.error(f"Error in completion check: {e}")
+            # Default to incomplete if we can't check
+            return False 

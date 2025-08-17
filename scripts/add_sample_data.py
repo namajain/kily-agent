@@ -66,24 +66,14 @@ def add_sample_data():
                 'profile_name': 'Customer Analytics',
                 'data_sources': json.dumps([
                     {
-                        'url': 'file://sample_data/customers.csv',
-                        'filename': 'customers.csv',
-                        'description': 'Customer demographic data'
+                        'url': 'file://downloads/2025-08-17/profile2/this_month_keyword_summary.csv',
+                        'filename': 'this_month_keyword_summary.csv',
+                        'description': 'This month keyword performance summary'
                     },
                     {
-                        'url': 'file://sample_data/purchases.csv',
-                        'filename': 'purchases.csv',
-                        'description': 'Customer purchase history'
-                    },
-                    {
-                        'url': 'file://sample_data/feedback.csv',
-                        'filename': 'feedback.csv',
-                        'description': 'Customer feedback and ratings'
-                    },
-                    {
-                        'url': 'file://sample_data/support.csv',
-                        'filename': 'support.csv',
-                        'description': 'Customer support tickets'
+                        'url': 'file://downloads/2025-08-17/profile2/this_week_keyword_summary.csv',
+                        'filename': 'this_week_keyword_summary.csv',
+                        'description': 'This week keyword performance summary'
                     }
                 ]),
                 'is_active': True

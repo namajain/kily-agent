@@ -1,0 +1,2 @@
+Previous execution attempts ({attempt_count}):
+{execution_history}

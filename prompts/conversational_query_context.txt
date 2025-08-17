@@ -1,0 +1,6 @@
+User Query: {query}
+
+Analysis Result:
+{analysis_result}
+
+Please provide a conversational response explaining these results in simple terms.
