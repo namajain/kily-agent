@@ -305,27 +305,161 @@ The system uses the following main tables:
 
 ## API Reference
 
-### Socket.IO Events
+### Backend Server (Port 5001)
 
-#### Client → Server
-- `authenticate`: User authentication
-- `start_chat`: Start chat session for profile
-- `send_message`: Send chat message
-- `get_chat_history`: Get session chat history
-- `get_user_profiles`: Get user's profiles
-- `get_context_summary`: Get data context summary
-- `end_session`: End chat session
+The backend server provides both REST API endpoints and Socket.IO real-time communication.
 
-#### Server → Client
-- `connected`: Connection confirmation
-- `authenticated`: Authentication success
-- `auth_error`: Authentication failure
-- `chat_started`: Chat session created
-- `message_response`: Analysis response
-- `chat_history`: Chat history data
-- `user_profiles`: User profile list
-- `context_summary`: Context data summary
-- `error`: Error messages
+#### REST API Endpoints
+
+**Health Check**
+- `GET /health` - Server health status
+  - Response: `{"status": "healthy", "timestamp": "2024-01-01T00:00:00"}`
+
+**User Management**
+- `GET /api/users/{user_id}/profiles` - Get user's profiles
+  - Response: `{"profiles": [...]}`
+- `GET /api/users/{user_id}/sessions` - Get user's chat sessions
+  - Response: `{"sessions": [...]}`
+- `GET /api/users/{user_id}/chat-history` - Get user's complete chat history
+  - Response: `{"chat_history": [...]}`
+
+**Session Management**
+- `GET /api/sessions/{session_id}/messages` - Get messages for a session
+  - Response: `{"messages": [...]}`
+
+#### Socket.IO Events
+
+**Client → Server Events**
+- `authenticate` - User authentication
+  - Data: `{"user_id": "string", "profile_id": "string"}`
+- `start_chat` - Start chat session for profile
+  - Data: `{"user_id": "string", "profile_id": "string"}`
+- `send_message` - Send chat message
+  - Data: `{"session_id": "string", "message": "string"}`
+- `restore_session` - Restore a previous session
+  - Data: `{"session_id": "string"}`
+
+**Server → Client Events**
+- `connected` - Connection confirmation
+  - Data: `{"message": "Connected to QnA Agent Server"}`
+- `authenticated` - Authentication success
+  - Data: `{"user_id": "string", "profile_id": "string", "message": "string"}`
+- `auth_error` - Authentication failure
+  - Data: `{"message": "error description"}`
+- `chat_started` - Chat session created
+  - Data: `{"session_id": "string", "profile_id": "string", "profile_name": "string", "message": "string"}`
+- `message_response` - Analysis response
+  - Data: `{"response": "string", "timestamp": "string"}`
+- `session_restored` - Session restoration complete
+  - Data: `{"session_id": "string", "profile_id": "string", "profile_name": "string", "chat_history": [...], "message": "string"}`
+- `error` - Error messages
+  - Data: `{"message": "error description"}`
+
+### Data Service (Port 5002)
+
+The data service provides REST API endpoints for data management and chat storage.
+
+#### REST API Endpoints
+
+**Health Check**
+- `GET /health` - Service health status
+  - Response: `{"status": "healthy", "timestamp": "2024-01-01T00:00:00", "service": "data-service", "mode": "hardcoded"}`
+
+**User Management**
+- `GET /api/users/{user_id}` - Get user by ID
+  - Response: `{"user_id": "string", "username": "string", "email": "string", "created_at": "string"}`
+- `POST /api/users` - Create user (not implemented in hardcoded mode)
+  - Response: `{"error": "User creation not supported in hardcoded mode"}` (501)
+- `PUT /api/users/{user_id}` - Update user (not implemented in hardcoded mode)
+  - Response: `{"error": "User updates not supported in hardcoded mode"}` (501)
+- `DELETE /api/users/{user_id}` - Delete user (not implemented in hardcoded mode)
+  - Response: `{"error": "User deletion not supported in hardcoded mode"}` (501)
+
+**Profile Management**
+- `GET /api/users/{user_id}/profiles` - Get all profiles for a user
+  - Response: `{"user_id": "string", "profiles": [...]}`
+- `GET /api/profiles/{profile_id}` - Get profile by ID
+  - Response: `{"profile_id": "string", "user_id": "string", "profile_name": "string", "data_sources": [...], "is_active": boolean, "created_at": "string"}`
+- `POST /api/profiles` - Create profile (not implemented in hardcoded mode)
+  - Response: `{"error": "Profile creation not supported in hardcoded mode"}` (501)
+- `PUT /api/profiles/{profile_id}` - Update profile (not implemented in hardcoded mode)
+  - Response: `{"error": "Profile updates not supported in hardcoded mode"}` (501)
+- `DELETE /api/profiles/{profile_id}` - Delete profile (not implemented in hardcoded mode)
+  - Response: `{"error": "Profile deletion not supported in hardcoded mode"}` (501)
+
+**Chat Session Management**
+- `GET /api/users/{user_id}/sessions` - Get all chat sessions for a user
+  - Response: `{"user_id": "string", "sessions": [...]}`
+- `GET /api/sessions/{session_id}` - Get session details
+  - Response: `{"session_id": "string", "user_id": "string", "profile_id": "string", "chat_id": "string", "created_at": "string", "last_activity": "string", "is_active": boolean}`
+- `GET /api/sessions/{session_id}/messages` - Get chat messages for a session
+  - Response: `{"session_id": "string", "messages": [...]}`
+- `GET /api/users/{user_id}/chat-history` - Get all chat history for a user across all sessions
+  - Response: `{"user_id": "string", "chat_history": [...]}`
+
+**Chat Session Operations**
+- `POST /api/sessions/{session_id}` - Create a new chat session
+  - Request Body: `{"user_id": "string", "profile_id": "string", "chat_id": "string"}`
+  - Response: `{"message": "Session created successfully"}` (201)
+- `POST /api/sessions/{session_id}/messages` - Add a message to a session
+  - Request Body: `{"message": {"type": "string", "content": "string", "timestamp": "string"}}`
+  - Response: `{"message": "Message added successfully"}` (201)
+- `PUT /api/sessions/{session_id}/activity` - Update session last activity timestamp
+  - Response: `{"message": "Session activity updated successfully"}` (200)
+- `DELETE /api/sessions/{session_id}` - End a session
+  - Response: `{"message": "Session ended successfully"}` (200)
+
+#### Data Models
+
+**User Object**
+```json
+{
+  "user_id": "string",
+  "username": "string",
+  "email": "string",
+  "created_at": "string (ISO 8601)"
+}
+```
+
+**Profile Object**
+```json
+{
+  "profile_id": "string",
+  "user_id": "string",
+  "profile_name": "string",
+  "data_sources": [
+    {
+      "url": "string",
+      "filename": "string",
+      "description": "string"
+    }
+  ],
+  "is_active": boolean,
+  "created_at": "string (ISO 8601)"
+}
+```
+
+**Session Object**
+```json
+{
+  "session_id": "string",
+  "user_id": "string",
+  "profile_id": "string",
+  "chat_id": "string",
+  "created_at": "string (ISO 8601)",
+  "last_activity": "string (ISO 8601)",
+  "is_active": boolean
+}
+```
+
+**Message Object**
+```json
+{
+  "type": "user|assistant",
+  "content": "string",
+  "timestamp": "string (ISO 8601)"
+}
+```
 
 ## Development
 
