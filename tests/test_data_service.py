@@ -7,30 +7,30 @@ import requests
 import json
 from unittest.mock import patch, MagicMock
 
-class TestMockAPI:
-    """Test Mock API server endpoints"""
+class TestDataService:
+    """Test Data Service server endpoints"""
     
     def setup_method(self):
         """Setup test environment"""
-        self.mock_api_url = "http://localhost:5002"
+        self.data_service_url = "http://localhost:5002"
     
-    def test_mock_api_health(self):
-        """Test Mock API health endpoint"""
+    def test_data_service_health(self):
+        """Test Data Service health endpoint"""
         try:
-            response = requests.get(f"{self.mock_api_url}/health")
+            response = requests.get(f"{self.data_service_url}/health")
             assert response.status_code == 200
             data = response.json()
             assert 'status' in data
             assert data['status'] == 'healthy'
         except requests.exceptions.ConnectionError:
-            pytest.skip("Mock API server not running")
+            pytest.skip("Data Service server not running")
     
-    def test_mock_api_get_user_profiles(self):
-        """Test Mock API get user profiles endpoint"""
+    def test_data_service_get_user_profiles(self):
+        """Test Data Service get user profiles endpoint"""
         user_id = "user1"
         
         try:
-            response = requests.get(f"{self.mock_api_url}/api/users/{user_id}/profiles")
+            response = requests.get(f"{self.data_service_url}/api/users/{user_id}/profiles")
             assert response.status_code == 200
             data = response.json()
             
@@ -57,14 +57,14 @@ class TestMockAPI:
                 assert isinstance(profile['is_active'], bool)
                 
         except requests.exceptions.ConnectionError:
-            pytest.skip("Mock API server not running")
+            pytest.skip("Data Service server not running")
     
-    def test_mock_api_get_user_profiles_invalid_user(self):
-        """Test Mock API get user profiles for invalid user"""
+    def test_data_service_get_user_profiles_invalid_user(self):
+        """Test Data Service get user profiles for invalid user"""
         user_id = "invalid_user"
         
         try:
-            response = requests.get(f"{self.mock_api_url}/api/users/{user_id}/profiles")
+            response = requests.get(f"{self.data_service_url}/api/users/{user_id}/profiles")
             assert response.status_code == 200
             data = response.json()
             
@@ -74,14 +74,14 @@ class TestMockAPI:
             assert len(data['profiles']) == 0
             
         except requests.exceptions.ConnectionError:
-            pytest.skip("Mock API server not running")
+            pytest.skip("Data Service server not running")
     
-    def test_mock_api_get_specific_profile(self):
-        """Test Mock API get specific profile endpoint"""
+    def test_data_service_get_specific_profile(self):
+        """Test Data Service get specific profile endpoint"""
         profile_id = "profile1"
         
         try:
-            response = requests.get(f"{self.mock_api_url}/api/profiles/{profile_id}")
+            response = requests.get(f"{self.data_service_url}/api/profiles/{profile_id}")
             assert response.status_code == 200
             data = response.json()
             
@@ -93,25 +93,25 @@ class TestMockAPI:
             assert 'is_active' in data
             
         except requests.exceptions.ConnectionError:
-            pytest.skip("Mock API server not running")
+            pytest.skip("Data Service server not running")
     
-    def test_mock_api_get_nonexistent_profile(self):
-        """Test Mock API get nonexistent profile"""
+    def test_data_service_get_nonexistent_profile(self):
+        """Test Data Service get nonexistent profile"""
         profile_id = "nonexistent_profile"
         
         try:
-            response = requests.get(f"{self.mock_api_url}/api/profiles/{profile_id}")
+            response = requests.get(f"{self.data_service_url}/api/profiles/{profile_id}")
             assert response.status_code == 404
             
         except requests.exceptions.ConnectionError:
             pytest.skip("Mock API server not running")
     
-    def test_mock_api_data_sources_structure(self):
+    def test_data_service_data_sources_structure(self):
         """Test that data sources have proper structure"""
         user_id = "user1"
         
         try:
-            response = requests.get(f"{self.mock_api_url}/api/users/{user_id}/profiles")
+            response = requests.get(f"{self.data_service_url}/api/users/{user_id}/profiles")
             assert response.status_code == 200
             data = response.json()
             
@@ -139,12 +139,12 @@ class TestMockAPI:
         except requests.exceptions.ConnectionError:
             pytest.skip("Mock API server not running")
     
-    def test_mock_api_multiple_data_sources(self):
+    def test_data_service_multiple_data_sources(self):
         """Test that profiles can have multiple data sources"""
         user_id = "user1"
         
         try:
-            response = requests.get(f"{self.mock_api_url}/api/users/{user_id}/profiles")
+            response = requests.get(f"{self.data_service_url}/api/users/{user_id}/profiles")
             assert response.status_code == 200
             data = response.json()
             
@@ -169,14 +169,14 @@ class TestMockAPI:
         except requests.exceptions.ConnectionError:
             pytest.skip("Mock API server not running")
     
-    def test_mock_api_user_isolation(self):
+    def test_data_service_user_isolation(self):
         """Test that users can only see their own profiles"""
         users = ["user1", "user2"]
         user_profiles = {}
         
         try:
             for user_id in users:
-                response = requests.get(f"{self.mock_api_url}/api/users/{user_id}/profiles")
+                response = requests.get(f"{self.data_service_url}/api/users/{user_id}/profiles")
                 assert response.status_code == 200
                 data = response.json()
                 user_profiles[user_id] = data['profiles']
@@ -198,10 +198,10 @@ class TestMockAPI:
         except requests.exceptions.ConnectionError:
             pytest.skip("Mock API server not running")
     
-    def test_mock_api_response_headers(self):
-        """Test that Mock API returns proper headers"""
+    def test_data_service_response_headers(self):
+        """Test that Data Service returns proper headers"""
         try:
-            response = requests.get(f"{self.mock_api_url}/health")
+            response = requests.get(f"{self.data_service_url}/health")
             assert response.status_code == 200
             
             # Check for CORS headers
@@ -215,15 +215,15 @@ class TestMockAPI:
         except requests.exceptions.ConnectionError:
             pytest.skip("Mock API server not running")
     
-    def test_mock_api_error_handling(self):
-        """Test Mock API error handling"""
+    def test_data_service_error_handling(self):
+        """Test Data Service error handling"""
         try:
             # Test invalid endpoint
-            response = requests.get(f"{self.mock_api_url}/invalid/endpoint")
+            response = requests.get(f"{self.data_service_url}/invalid/endpoint")
             assert response.status_code == 404
             
             # Test invalid user ID format
-            response = requests.get(f"{self.mock_api_url}/api/users//profiles")
+            response = requests.get(f"{self.data_service_url}/api/users//profiles")
             assert response.status_code == 404
             
         except requests.exceptions.ConnectionError:

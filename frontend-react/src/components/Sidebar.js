@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FolderOpen, Loader, AlertCircle, ChevronDown, ChevronRight } from 'lucide-react';
+import { FolderOpen, Loader, AlertCircle, ChevronDown, ChevronRight, MessageSquare } from 'lucide-react';
 import ProfileList from './ProfileList';
 
 const Sidebar = ({ 
@@ -7,6 +7,7 @@ const Sidebar = ({
   selectedProfile, 
   onLoadProfiles, 
   onSelectProfile, 
+  onShowChatHistory,
   loading, 
   error 
 }) => {
@@ -149,6 +150,23 @@ const Sidebar = ({
                 </div>
               ))}
             </div>
+          </div>
+        )}
+
+        {/* Chat History Section */}
+        {userProfiles.length > 0 && (
+          <div className="mt-6 pt-6 border-t border-gray-200">
+            <h3 className="text-md font-semibold text-gray-900 mb-3 flex items-center">
+              <MessageSquare className="w-4 h-4 mr-2" />
+              Chat History
+            </h3>
+            <button
+              onClick={() => onShowChatHistory && onShowChatHistory(userId)}
+              className="w-full py-2 px-3 rounded-md text-sm font-medium bg-gray-100 hover:bg-gray-200 text-gray-700 transition-colors flex items-center justify-center"
+            >
+              <MessageSquare className="w-4 h-4 mr-2" />
+              View Chat History
+            </button>
           </div>
         )}
 

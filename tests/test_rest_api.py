@@ -13,7 +13,7 @@ class TestRestAPI:
     def setup_method(self):
         """Setup test environment"""
         self.base_url = "http://localhost:5001"
-        self.mock_api_url = "http://localhost:5002"
+        self.data_service_url = "http://localhost:5002"
     
     def test_health_endpoint(self):
         """Test health check endpoint"""
@@ -86,7 +86,7 @@ class TestRestAPI:
             pytest.skip("Backend server not running")
     
     @patch('requests.get')
-    def test_mock_api_integration(self, mock_get):
+    def test_data_service_integration(self, mock_get):
         """Test integration with Mock API"""
         # Mock the Mock API response
         mock_response = MagicMock()

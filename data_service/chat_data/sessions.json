@@ -1,0 +1,65 @@
+{
+  "8e241a87-9459-4ef3-9444-d0ac1e13697b": {
+    "session_id": "8e241a87-9459-4ef3-9444-d0ac1e13697b",
+    "user_id": "user1",
+    "profile_id": "profile2",
+    "chat_id": "fb3d3040-c2be-4fbc-b5d6-f013885aaf72",
+    "created_at": "2025-08-17T15:05:17.543865",
+    "last_activity": "2025-08-17T15:05:17.543881",
+    "is_active": true
+  },
+  "3ebf9fc9-fbf6-4b29-a07e-1c9a3b8895ea": {
+    "session_id": "3ebf9fc9-fbf6-4b29-a07e-1c9a3b8895ea",
+    "user_id": "user1",
+    "profile_id": "profile2",
+    "chat_id": "bd75315c-e80e-48cd-90d5-35f1532e70cf",
+    "created_at": "2025-08-17T15:05:22.852284",
+    "last_activity": "2025-08-17T15:13:43.411249",
+    "is_active": true
+  },
+  "bad0a7f8-1736-433c-9c26-3a6b4982fcf9": {
+    "session_id": "bad0a7f8-1736-433c-9c26-3a6b4982fcf9",
+    "user_id": "user1",
+    "profile_id": "profile1",
+    "chat_id": "00f55cac-bef1-42b8-a6aa-2c8c875a6738",
+    "created_at": "2025-08-17T15:14:44.723388",
+    "last_activity": "2025-08-17T15:14:44.723393",
+    "is_active": true
+  },
+  "997d06d5-b219-4a3b-b826-b8997de63c34": {
+    "session_id": "997d06d5-b219-4a3b-b826-b8997de63c34",
+    "user_id": "user1",
+    "profile_id": "profile1",
+    "chat_id": "a8982398-5cf9-4ef8-870b-2252828a1976",
+    "created_at": "2025-08-17T15:14:48.589775",
+    "last_activity": "2025-08-17T15:14:48.589788",
+    "is_active": true
+  },
+  "90e1a9d1-9a21-41cf-a0d6-cada6c3791e8": {
+    "session_id": "90e1a9d1-9a21-41cf-a0d6-cada6c3791e8",
+    "user_id": "user1",
+    "profile_id": "profile1",
+    "chat_id": "80119957-0957-425b-b7c4-7489d6cad756",
+    "created_at": "2025-08-17T15:15:02.758086",
+    "last_activity": "2025-08-17T15:15:15.669545",
+    "is_active": true
+  },
+  "39e9b1af-4d0b-48fa-ac73-7a3fe4b45320": {
+    "session_id": "39e9b1af-4d0b-48fa-ac73-7a3fe4b45320",
+    "user_id": "user1",
+    "profile_id": "profile2",
+    "chat_id": "d9b63315-aa6d-49cb-b2a8-4698870f834f",
+    "created_at": "2025-08-17T16:11:46.979066",
+    "last_activity": "2025-08-17T16:11:46.979076",
+    "is_active": true
+  },
+  "8aae3be6-d9ee-4b1c-89fd-2cbca3c0040d": {
+    "session_id": "8aae3be6-d9ee-4b1c-89fd-2cbca3c0040d",
+    "user_id": "user1",
+    "profile_id": "profile2",
+    "chat_id": "c41677f9-d9fa-40ff-a83c-f8022e399712",
+    "created_at": "2025-08-17T16:15:18.961602",
+    "last_activity": "2025-08-17T16:15:36.908862",
+    "is_active": true
+  }
+}

@@ -1,4 +1,4 @@
-# Mock API Server
+# Data Service
 
 A Flask-based REST API server that handles all database operations for the Enhanced QnA Agent system.
 
@@ -31,7 +31,7 @@ A Flask-based REST API server that handles all database operations for the Enhan
 
 1. Install dependencies:
    ```bash
-   cd mock_api
+   cd data_service
    uv sync
    ```
 
@@ -43,7 +43,7 @@ A Flask-based REST API server that handles all database operations for the Enhan
 
 3. Run the server:
    ```bash
-   uv run python3 mock_api/server.py
+   uv run python3 data_service/server.py
    ```
 
 ## Usage

@@ -73,7 +73,7 @@ This is the MVP (Minimum Viable Product) implementation of the Enhanced QnA Agen
 
 The system is now split into three main components:
 
-1. **Mock API Server** (`mock_api/`) - Handles all database operations via REST endpoints
+1. **Data Service** (`data_service/`) - Handles all database operations via REST endpoints
 2. **Backend Server** (`backend/`) - Flask Socket.IO server that communicates with Mock API
 3. **Frontend** (`frontend-react/`) - React application that connects to the backend
 
@@ -180,9 +180,9 @@ make run-all
 
 **Option 2: Start Services Individually**
 
-**Terminal 1 - Mock API (Database Layer):**
+**Terminal 1 - Data Service (Database Layer):**
 ```bash
-make run-mock-api
+make run-data-service
 ```
 
 **Terminal 2 - Backend (Socket.IO Server):**
@@ -201,7 +201,7 @@ make run-react
 
 - **React Frontend**: http://localhost:3000
 - **Backend Health**: http://localhost:5001/health
-- **Mock API Health**: http://localhost:5002/health
+- **Data Service Health**: http://localhost:5002/health
 
 ## Usage
 
@@ -254,7 +254,7 @@ make run-react
 │   │   └── index.js             # React entry point
 │   ├── package.json             # Node.js dependencies
 │   └── README.md                # React frontend docs
-├── mock_api/                    # Database API layer
+├── data_service/                # Data service layer
 │   ├── server.py                # REST API server
 │   ├── models.py                # Data models
 │   └── database.py              # Database connection

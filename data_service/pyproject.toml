@@ -1,12 +1,11 @@
 [project]
-name = "mock-api"
+name = "data-service"
 version = "0.1.0"
-description = "Mock API server for database operations"
+description = "Data service with hardcoded responses (no database dependency)"
 requires-python = ">=3.9"
 dependencies = [
     "flask>=2.3.0",
     "flask-cors>=4.0.0",
-    "psycopg2-binary>=2.9.0",
     "python-dotenv>=1.0.0",
     "requests>=2.31.0",
 ]
@@ -21,7 +20,7 @@ dev = [
 ]
 
 [project.scripts]
-mock-api = "mock_api.server:main"
+data-service = "data_service.server:main"
 
 [tool.uv]
 dev-dependencies = [

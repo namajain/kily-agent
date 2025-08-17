@@ -37,7 +37,7 @@ class QnABackend:
         self.app = Flask(__name__)
         
         # Enable CORS for all routes
-        CORS(self.app, origins=["http://localhost:3000", "http://localhost:8501"])
+        CORS(self.app, origins="*")
         
         # Initialize Socket.IO with CORS support
         self.socketio = SocketIO(
@@ -74,6 +74,36 @@ class QnABackend:
                 return {'profiles': profiles}
             except Exception as e:
                 logger.error(f"Error getting user profiles: {e}")
+                return {'error': str(e)}, 500
+        
+        @self.app.route('/api/users/<user_id>/sessions')
+        def get_user_sessions(user_id):
+            """REST endpoint to get user chat sessions"""
+            try:
+                sessions = api_client.get_user_sessions(user_id)
+                return {'sessions': sessions}
+            except Exception as e:
+                logger.error(f"Error getting user sessions: {e}")
+                return {'error': str(e)}, 500
+        
+        @self.app.route('/api/users/<user_id>/chat-history')
+        def get_user_chat_history(user_id):
+            """REST endpoint to get user chat history"""
+            try:
+                history = api_client.get_user_chat_history(user_id)
+                return {'chat_history': history}
+            except Exception as e:
+                logger.error(f"Error getting user chat history: {e}")
+                return {'error': str(e)}, 500
+        
+        @self.app.route('/api/sessions/<session_id>/messages')
+        def get_session_messages(session_id):
+            """REST endpoint to get session messages"""
+            try:
+                messages = api_client.get_session_messages(session_id)
+                return {'messages': messages}
+            except Exception as e:
+                logger.error(f"Error getting session messages: {e}")
                 return {'error': str(e)}, 500
         
         @self.socketio.on('connect')
@@ -197,6 +227,9 @@ class QnABackend:
                     'timestamp': datetime.now().isoformat()
                 })
                 
+                # Sync session state to ensure all data is persisted
+                self.session_manager.sync_session_state(session_id)
+                
                 emit('message_response', {
                     'response': response,
                     'timestamp': datetime.now().isoformat(),
@@ -292,6 +325,59 @@ class QnABackend:
             except Exception as e:
                 logger.error(f"Failed to get session stats: {e}")
                 emit('error', {'message': f'Failed to get session stats: {str(e)}'})
+        
+        @self.socketio.on('restore_session')
+        def handle_restore_session(data):
+            """Restore a session from persistent storage"""
+            try:
+                session_id = data.get('session_id')
+                
+                if not session_id:
+                    emit('error', {'message': 'Session ID is required'})
+                    return
+                
+                logger.info(f"Restoring session {session_id}")
+                
+                # Get session from data service
+                session_data = api_client.get_session(session_id)
+                if not session_data:
+                    emit('error', {'message': 'Session not found'})
+                    return
+                
+                # Get chat history from data service
+                messages = api_client.get_session_messages(session_id)
+                
+                # Get profile info
+                profile_info = self.context_manager.get_profile_info(session_data.get('profile_id'))
+                
+                # Restore session in memory (without recreating)
+                restored_session = {
+                    'session_id': session_id,
+                    'user_id': session_data.get('user_id'),
+                    'profile_id': session_data.get('profile_id'),
+                    'chat_id': session_data.get('chat_id'),
+                    'created_at': datetime.fromisoformat(session_data.get('created_at')),
+                    'last_activity': datetime.fromisoformat(session_data.get('last_activity')),
+                    'chat_history': messages,
+                    'context_data': self.context_manager.get_context_for_profile(session_data.get('profile_id'))
+                }
+                
+                # Store in memory
+                self.session_manager.active_sessions[session_id] = restored_session
+                
+                emit('session_restored', {
+                    'session_id': session_id,
+                    'profile_id': session_data.get('profile_id'),
+                    'profile_name': profile_info.get('profile_name', 'Unknown Profile'),
+                    'chat_history': messages,
+                    'message': 'Session restored successfully'
+                })
+                
+                logger.info(f"Session {session_id} restored successfully")
+                
+            except Exception as e:
+                logger.error(f"Failed to restore session: {e}")
+                emit('error', {'message': f'Failed to restore session: {str(e)}'})
     
     def _validate_user(self, user_id: str) -> bool:
         """Validate if user exists via API"""

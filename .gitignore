@@ -72,3 +72,4 @@ yarn-error.log*
 
 # Project-specific
 digest.txt
+*.pem

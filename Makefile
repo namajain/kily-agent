@@ -1,4 +1,4 @@
-.PHONY: help setup setup-react install test test-rest test-frontend test-mock-api test-socketio run-mock-api run-backend run-frontend run-react run-frontend-react run-all stop-all rerun clean format lint
+.PHONY: help setup setup-react install test test-rest test-frontend test-mock-api test-socketio run-mock-api run-backend run-frontend run-react run-frontend-react run-all stop-all rerun clean format lint rsync
 
 help: ## Show this help message
 	@echo "Enhanced QnA Agent System - Available Commands:"
@@ -29,9 +29,9 @@ test-frontend: ## Run frontend integration tests
 	@echo "Running frontend integration tests..."
 	uv run python -m pytest tests/test_frontend_integration.py -v
 
-test-mock-api: ## Run Mock API tests
-	@echo "Running Mock API tests..."
-	uv run python -m pytest tests/test_mock_api.py -v
+test-data-service: ## Run Data Service tests
+	@echo "Running Data Service tests..."
+	uv run python -m pytest tests/test_data_service.py -v
 
 test-socketio: ## Run Socket.IO chat tests
 	@echo "Running Socket.IO chat tests..."
@@ -41,9 +41,9 @@ test-cov: ## Run tests with coverage
 	@echo "Running tests with coverage..."
 	uv run pytest tests/ --cov=backend --cov=frontend --cov-report=html
 
-run-mock-api: ## Start the Mock API server
-	@echo "Starting Mock API server..."
-	cd mock_api && uv run python3 server.py &
+run-data-service: ## Start the Data Service
+	@echo "Starting Data Service..."
+	cd data_service && uv run python3 server.py &
 
 run-backend: ## Start the backend server
 	@echo "Starting backend server..."
@@ -60,14 +60,14 @@ run-frontend-react: ## Start the React frontend server (alias)
 
 run-all: ## Start all services in parallel
 	@echo "Starting all services in parallel..."
-	@echo "Starting Mock API server..."
-	cd mock_api && uv run python3 server.py &
+	@echo "Starting Data Service..."
+	cd data_service && uv run python3 server.py &
 	@echo "Starting backend server..."
 	uv run python3 scripts/start_backend.py &
 	@echo "Starting React frontend server..."
 	cd frontend-react && npm start &
 	@echo "All services starting! Check:"
-	@echo "  - Mock API: http://localhost:5002/health"
+	@echo "  - Data Service: http://localhost:5002/health"
 	@echo "  - Backend: http://localhost:5001/health"
 	@echo "  - React Frontend: http://localhost:3000"
 	@echo ""
@@ -126,3 +126,63 @@ update-deps: ## Update all dependencies
 	@echo "Updating dependencies..."
 	uv lock --upgrade
 	uv sync
+
+# Docker Commands
+docker-build: ## Build all Docker images
+	@echo "Building Docker images..."
+	docker compose build
+
+docker-up: ## Start all services with Docker Compose
+	@echo "Starting services with Docker Compose..."
+	docker compose up -d
+
+docker-down: ## Stop all Docker services
+	@echo "Stopping Docker services..."
+	docker compose down
+
+docker-logs: ## View Docker logs
+	@echo "Showing Docker logs..."
+	docker compose logs -f
+
+docker-clean: ## Clean up Docker resources
+	@echo "Cleaning up Docker resources..."
+	docker compose down -v
+	docker system prune -f
+
+docker-restart: ## Restart all Docker services
+	@echo "Restarting Docker services..."
+	docker compose restart
+
+docker-status: ## Show status of Docker services
+	@echo "Docker services status:"
+	docker compose ps
+
+rsync: ## Sync project to EC2 instance (one-directional, replaces everything)
+	@echo "Syncing project to EC2 instance (replacing everything)..."
+	@echo "📁 Syncing frontend-react files..."
+	rsync -avz --delete \
+		--exclude='.git' \
+		--exclude='.venv' \
+		--exclude='node_modules' \
+		--exclude='__pycache__' \
+		--exclude='*.pyc' \
+		--exclude='.pytest_cache' \
+		--exclude='artifacts' \
+		--exclude='*.log' \
+		--exclude='.DS_Store' \
+		--exclude='kily-agent.zip' \
+		--include='frontend-react/**' \
+		-e "ssh -i nj.pem" \
+		./ \
+		ec2-user@ec2-3-111-213-7.ap-south-1.compute.amazonaws.com:~/ec2_user/
+	@echo "✅ Project synced to EC2 instance (replaced everything)!"
+
+rsync-frontend: ## Sync only frontend-react files to EC2 instance
+	@echo "Syncing frontend-react files to EC2 instance..."
+	rsync -avz --delete \
+		--exclude='node_modules' \
+		--exclude='.DS_Store' \
+		-e "ssh -i nj.pem" \
+		frontend-react/ \
+		ec2-user@ec2-3-111-213-7.ap-south-1.compute.amazonaws.com:~/ec2_user/frontend-react/
+	@echo "✅ Frontend files synced to EC2 instance!"

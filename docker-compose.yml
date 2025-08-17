@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  # Data Service (Hardcoded Mode - No PostgreSQL needed)
+  data-service:
+    build:
+      context: .
+      dockerfile: data_service/Dockerfile
+    container_name: kily-data-service
+    environment:
+      - FLASK_ENV=production
+    volumes:
+      - ./downloads:/app/downloads:ro
+    networks:
+      - kily-network
+
+  # Backend Server
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: kily-backend
+    environment:
+      - MOCK_API_URL=http://data-service:5002
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - FLASK_ENV=production
+    ports:
+      - "5001:5001"
+    depends_on:
+      data-service:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+    volumes:
+      - ./downloads:/app/downloads:ro
+      - ./sample_data:/app/sample_data:ro
+      - artifacts_data:/app/artifacts
+    networks:
+      - kily-network
+
+  # React Frontend
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend-react/Dockerfile
+      args:
+        - REACT_APP_BACKEND_URL=http://localhost:5001
+        - REACT_APP_MOCK_API_URL=http://localhost:5002
+    container_name: kily-frontend
+    ports:
+      - "80:3000"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - kily-network
+
+volumes:
+  artifacts_data:
+    driver: local
+
+networks:
+  kily-network:
+    driver: bridge

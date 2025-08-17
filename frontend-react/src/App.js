@@ -6,6 +6,7 @@ import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 import ProfileList from './components/ProfileList';
 import ChatInterface from './components/ChatInterface';
+import ChatHistory from './components/ChatHistory';
 import { Brain, Database, MessageSquare, Users } from 'lucide-react';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5001';
@@ -19,6 +20,9 @@ function App() {
   const [chatHistory, setChatHistory] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [showChatHistory, setShowChatHistory] = useState(false);
+  const [currentUserId, setCurrentUserId] = useState('user1');
+  const [processingMessage, setProcessingMessage] = useState(false);
 
   // Initialize Socket.IO connection
   useEffect(() => {
@@ -46,11 +50,33 @@ function App() {
         content: data.response,
         timestamp: data.timestamp
       }]);
+      setProcessingMessage(false);
+    });
+
+    newSocket.on('session_restored', (data) => {
+      console.log('Session restored:', data);
+      setChatSession({
+        session_id: data.session_id,
+        profile_id: data.profile_id,
+        profile_name: data.profile_name
+      });
+      
+      // Set the profile for display
+      setSelectedProfile({
+        profile_id: data.profile_id,
+        profile_name: data.profile_name
+      });
+      
+      // Set the chat history
+      setChatHistory(data.chat_history || []);
+      setLoading(false);
     });
 
     newSocket.on('error', (data) => {
       console.error('Socket error:', data);
       setError(data.message);
+      setLoading(false);
+      setProcessingMessage(false);
     });
 
     setSocket(newSocket);
@@ -62,18 +88,58 @@ function App() {
 
   // Load user profiles
   const loadProfiles = async (userId = 'user1') => {
+    console.log('🔍 Load Profiles button clicked');
+    console.log('📋 User ID:', userId);
+    console.log('🌐 Backend URL:', BACKEND_URL);
+    console.log('🔗 Full API URL:', `${BACKEND_URL}/api/users/${userId}/profiles`);
+    
+    setCurrentUserId(userId);
     setLoading(true);
     setError(null);
     
     try {
+      console.log('📡 Making API request...');
       const response = await axios.get(`${BACKEND_URL}/api/users/${userId}/profiles`);
+      console.log('✅ API Response received:', response);
+      console.log('📊 Profiles data:', response.data);
       setUserProfiles(response.data.profiles);
+      console.log('💾 Profiles state updated:', response.data.profiles);
     } catch (err) {
-      console.error('Failed to load profiles:', err);
+      console.error('❌ Failed to load profiles:', err);
+      console.error('❌ Error details:', {
+        message: err.message,
+        status: err.response?.status,
+        statusText: err.response?.statusText,
+        data: err.response?.data
+      });
       setError('Failed to load profiles');
     } finally {
       setLoading(false);
+      console.log('🏁 Load profiles operation completed');
     }
+  };
+
+  // Show chat history
+  const handleShowChatHistory = (userId) => {
+    setShowChatHistory(true);
+    setSelectedProfile(null);
+  };
+
+  // Continue chat from history
+  const handleContinueChat = (sessionId) => {
+    if (!socket || !connected) {
+      setError('Not connected to backend');
+      return;
+    }
+
+    setShowChatHistory(false);
+    setLoading(true);
+    setError(null);
+    
+    // Restore session from backend
+    socket.emit('restore_session', {
+      session_id: sessionId
+    });
   };
 
   // Start chat session
@@ -98,6 +164,9 @@ function App() {
       setError('Not connected or no active session');
       return;
     }
+
+    // Set processing state
+    setProcessingMessage(true);
 
     // Add user message to chat history
     setChatHistory(prev => [...prev, {
@@ -125,19 +194,27 @@ function App() {
             selectedProfile={selectedProfile}
             onLoadProfiles={loadProfiles}
             onSelectProfile={startChat}
+            onShowChatHistory={handleShowChatHistory}
             loading={loading}
             error={error}
           />
           
           {/* Main Content */}
           <main className="flex-1 p-6">
-            {selectedProfile ? (
+            {showChatHistory ? (
+              <ChatHistory
+                userId={currentUserId}
+                onSelectSession={handleContinueChat}
+              />
+            ) : selectedProfile ? (
               <ChatInterface
                 profile={selectedProfile}
                 chatHistory={chatHistory}
                 onSendMessage={sendMessage}
                 session={chatSession}
                 connected={connected}
+                loading={loading}
+                processingMessage={processingMessage}
               />
             ) : (
               <div className="text-center py-12">
@@ -146,35 +223,9 @@ function App() {
                   <h2 className="text-2xl font-bold text-gray-900 mb-2">
                     Welcome to Enhanced QnA Agent
                   </h2>
-                  <p className="text-gray-600 mb-6">
+                  <p className="text-gray-600">
                     Select a profile from the sidebar to start analyzing your data with AI-powered insights.
                   </p>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-left">
-                    <div className="card">
-                      <Database className="w-8 h-8 text-primary-500 mb-2" />
-                      <h3 className="font-semibold mb-1">Multiple Data Sources</h3>
-                      <p className="text-sm text-gray-600">
-                        Connect and analyze multiple datasets simultaneously
-                      </p>
-                    </div>
-                    
-                    <div className="card">
-                      <MessageSquare className="w-8 h-8 text-primary-500 mb-2" />
-                      <h3 className="font-semibold mb-1">AI-Powered Chat</h3>
-                      <p className="text-sm text-gray-600">
-                        Ask questions and get intelligent responses about your data
-                      </p>
-                    </div>
-                    
-                    <div className="card">
-                      <Users className="w-8 h-8 text-primary-500 mb-2" />
-                      <h3 className="font-semibold mb-1">Profile Management</h3>
-                      <p className="text-sm text-gray-600">
-                        Organize your data analysis into focused profiles
-                      </p>
-                    </div>
-                  </div>
                 </div>
               </div>
             )}

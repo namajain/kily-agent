@@ -6,10 +6,11 @@ const ChatInterface = ({
   chatHistory, 
   onSendMessage, 
   session, 
-  connected 
+  connected,
+  loading = false,
+  processingMessage = false
 }) => {
   const [message, setMessage] = useState('');
-  const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -22,14 +23,10 @@ const ChatInterface = ({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!message.trim() || !connected) return;
+    if (!message.trim() || !connected || processingMessage) return;
 
-    setIsTyping(true);
     onSendMessage(message.trim());
     setMessage('');
-    
-    // Simulate typing indicator
-    setTimeout(() => setIsTyping(false), 1000);
   };
 
   const formatTime = (timestamp) => {
@@ -37,12 +34,10 @@ const ChatInterface = ({
   };
 
   const exampleQueries = [
-    "Show me a summary of the data",
-    "What are the data types?",
-    "Are there any missing values?",
-    "What is the average value?",
-    "Show me the distribution",
-    "Find correlations between variables"
+    "Which is the highest performing keyword?",
+    "Which is the highest performing keyword this week?",
+    "Which is the highest performing keyword this month?",
+    "Which is the highest performing keyword by ROAS?"
   ];
 
   return (
@@ -71,7 +66,14 @@ const ChatInterface = ({
 
       {/* Chat Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {chatHistory.length === 0 ? (
+        {loading ? (
+          <div className="flex items-center justify-center h-64">
+            <div className="text-center">
+              <Loader className="w-8 h-8 animate-spin text-blue-500 mx-auto mb-4" />
+              <p className="text-gray-600">Restoring chat session...</p>
+            </div>
+          </div>
+        ) : chatHistory.length === 0 ? (
           <div className="text-center py-8">
             <MessageSquare className="w-12 h-12 text-gray-300 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">
@@ -87,9 +89,14 @@ const ChatInterface = ({
                 <button
                   key={index}
                   onClick={() => setMessage(query)}
-                  className="p-3 text-left bg-gray-50 hover:bg-gray-100 rounded-lg border border-gray-200 transition-colors"
+                  disabled={processingMessage}
+                  className={`p-3 text-left rounded-lg border transition-colors ${
+                    processingMessage 
+                      ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
+                      : 'bg-gray-50 hover:bg-gray-100 border-gray-200 text-gray-700'
+                  }`}
                 >
-                  <span className="text-sm text-gray-700">{query}</span>
+                  <span className="text-sm">{query}</span>
                 </button>
               ))}
             </div>
@@ -127,15 +134,14 @@ const ChatInterface = ({
           ))
         )}
 
-        {/* Typing Indicator */}
-        {isTyping && (
+        {/* Processing Indicator */}
+        {processingMessage && (
           <div className="flex justify-start">
             <div className="flex items-center space-x-2 bg-white border border-gray-200 rounded-lg p-3">
               <Bot className="w-4 h-4 text-gray-600" />
-              <div className="flex space-x-1">
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" />
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }} />
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
+              <div className="flex items-center space-x-2">
+                <Loader className="w-4 h-4 animate-spin text-blue-500" />
+                <span className="text-sm text-gray-600">Processing your message...</span>
               </div>
             </div>
           </div>
@@ -151,17 +157,26 @@ const ChatInterface = ({
             type="text"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            placeholder="Ask a question about your data..."
-            disabled={!connected}
+            placeholder={processingMessage ? "Processing..." : "Ask a question about your data..."}
+            disabled={!connected || processingMessage}
             className="flex-1 input-field"
           />
           <button
             type="submit"
-            disabled={!message.trim() || !connected}
+            disabled={!message.trim() || !connected || processingMessage}
             className="btn-primary flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <Send className="w-4 h-4" />
-            <span>Send</span>
+            {processingMessage ? (
+              <>
+                <Loader className="w-4 h-4 animate-spin" />
+                <span>Processing...</span>
+              </>
+            ) : (
+              <>
+                <Send className="w-4 h-4" />
+                <span>Send</span>
+              </>
+            )}
           </button>
         </form>
         

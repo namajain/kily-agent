@@ -48,8 +48,12 @@ class SessionManager:
             # Store in memory
             self.active_sessions[session_id] = session
             
-            # Create chat record in database (temporarily disabled for API client migration)
-            # self._create_chat_record(chat_id, user_id, profile_id)
+            # Create persistent session record
+            try:
+                api_client.create_session(session_id, user_id, profile_id, chat_id)
+                logger.info(f"Persistent session {session_id} created")
+            except Exception as e:
+                logger.warning(f"Failed to create persistent session: {e}")
             
             logger.info(f"Session {session_id} created successfully")
             return session_id
@@ -86,7 +90,7 @@ class SessionManager:
     def add_message(self, session_id: str, message: Dict):
         """
         Add message to session chat history.
-        Updates both memory and database.
+        Updates both memory and persistent storage.
         """
         try:
             session = self.get_session(session_id)
@@ -102,14 +106,44 @@ class SessionManager:
             session['chat_history'].append(message)
             session['last_activity'] = datetime.now()
             
-            # Store in database (temporarily disabled for API client migration)
-            # self._store_chat_message(session['chat_id'], message)
+            # Store in persistent storage
+            try:
+                api_client.add_message(session_id, message)
+                # Also update session activity in data service
+                api_client.update_session_activity(session_id)
+                logger.debug(f"Message stored persistently for session {session_id}")
+            except Exception as e:
+                logger.warning(f"Failed to store message persistently: {e}")
             
             logger.debug(f"Message added to session {session_id}")
             
         except Exception as e:
             logger.error(f"Failed to add message to session {session_id}: {e}")
             raise
+    
+    def sync_session_state(self, session_id: str) -> bool:
+        """
+        Sync entire session state to persistent storage.
+        This ensures all session data is backed up.
+        """
+        try:
+            session = self.get_session(session_id)
+            if not session:
+                logger.warning(f"Cannot sync expired session {session_id}")
+                return False
+            
+            # Sync session metadata
+            try:
+                api_client.update_session_activity(session_id)
+                logger.debug(f"Session state synced for {session_id}")
+                return True
+            except Exception as e:
+                logger.warning(f"Failed to sync session state: {e}")
+                return False
+                
+        except Exception as e:
+            logger.error(f"Failed to sync session state for {session_id}: {e}")
+            return False
     
     def get_chat_history(self, session_id: str) -> List[Dict]:
         """Get chat history for a session"""

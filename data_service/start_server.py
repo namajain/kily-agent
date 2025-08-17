@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Startup script for Mock API Server
+Startup script for Data Service
 """
 import os
 import sys
@@ -8,11 +8,11 @@ import subprocess
 from pathlib import Path
 
 def main():
-    """Start the Mock API Server"""
+    """Start the Data Service"""
     # Get the directory of this script
     script_dir = Path(__file__).parent.absolute()
     
-    # Change to the mock_api directory
+    # Change to the data_service directory
     os.chdir(script_dir)
     
     # Check if .env exists, if not copy from parent
@@ -27,7 +27,7 @@ def main():
             print("⚠️  No .env file found and no env.example in parent directory")
     
     # Start the server
-    print("🚀 Starting Mock API Server...")
+    print("🚀 Starting Data Service...")
     print(f"📁 Working directory: {script_dir}")
     print("🌐 Server will be available at: http://localhost:5002")
     print("📋 API Documentation:")
@@ -47,9 +47,9 @@ def main():
         # Run the server
         subprocess.run([sys.executable, 'server.py'], check=True)
     except KeyboardInterrupt:
-        print("\n👋 Mock API Server stopped")
+        print("\n👋 Data Service stopped")
     except Exception as e:
-        print(f"❌ Failed to start Mock API Server: {e}")
+        print(f"❌ Failed to start Data Service: {e}")
         sys.exit(1)
 
 if __name__ == '__main__':
