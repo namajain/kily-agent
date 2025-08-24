@@ -1,4 +1,4 @@
-.PHONY: help setup setup-react install test test-rest test-frontend test-mock-api test-socketio run-mock-api run-backend run-frontend run-react run-frontend-react run-all stop-all rerun clean format lint rsync
+.PHONY: help setup setup-react install test test-rest test-frontend test-data-service test-socketio run-data-service run-backend run-react run-frontend-react run-all stop-all rerun clean format lint rsync rotate-logs tail-logs tail-backend tail-data-service tail-frontend tail-conversations show-logs show-conversations clean-logs
 
 help: ## Show this help message
 	@echo "Enhanced QnA Agent System - Available Commands:"
@@ -51,25 +51,36 @@ run-backend: ## Start the backend server
 
 
 
-run-react: ## Start the React frontend server
-	@echo "Starting React frontend server..."
-	cd frontend-react && npm start &
+run-react: ## Start the React frontend server with logging
+	@echo "Starting React frontend server with logging..."
+	uv run python3 scripts/start_frontend_with_logging.py &
 
 run-frontend-react: ## Start the React frontend server (alias)
 	@make run-react
 
-run-all: ## Start all services in parallel
-	@echo "Starting all services in parallel..."
+run-all: ## Start all services in parallel with logging
+	@echo "Starting all services in parallel with logging..."
+	@make rotate-logs
 	@echo "Starting Data Service..."
 	cd data_service && uv run python3 server.py &
 	@echo "Starting backend server..."
 	uv run python3 scripts/start_backend.py &
 	@echo "Starting React frontend server..."
-	cd frontend-react && npm start &
+	uv run python3 scripts/start_frontend_with_logging.py &
 	@echo "All services starting! Check:"
 	@echo "  - Data Service: http://localhost:5002/health"
 	@echo "  - Backend: http://localhost:5001/health"
 	@echo "  - React Frontend: http://localhost:3000"
+	@echo ""
+	@echo "Logs available in logs/ directory:"
+	@echo "  - Backend: logs/backend.log"
+	@echo "  - Data Service: logs/data_service.log"
+	@echo "  - Frontend: logs/frontend.log"
+	@echo ""
+	@echo "Use 'make tail-logs' to follow all logs or:"
+	@echo "  - make tail-backend"
+	@echo "  - make tail-data-service"
+	@echo "  - make tail-frontend"
 	@echo ""
 	@echo "Press Ctrl+C to stop all services"
 	@wait
@@ -78,7 +89,7 @@ stop-all: ## Stop all running services
 	@echo "Stopping all services..."
 	@pkill -f "python.*server.py" || true
 	@pkill -f "python.*start_backend.py" || true
-
+	@pkill -f "python.*start_frontend_with_logging.py" || true
 	@pkill -f "react-scripts" || true
 	@pkill -f "node.*react-scripts" || true
 	@echo "All services stopped"
@@ -121,6 +132,68 @@ add-dep: ## Add a new dependency (usage: make add-dep PKG=package-name)
 add-dev-dep: ## Add a new development dependency (usage: make add-dev-dep PKG=package-name)
 	@if [ -z "$(PKG)" ]; then echo "Usage: make add-dev-dep PKG=package-name"; exit 1; fi
 	uv add --dev $(PKG)
+
+install-voice-deps: ## Install voice processing dependencies
+	@echo "Installing voice processing dependencies..."
+	uv add elevenlabs
+	# uv add openai-whisper  # Commented out - not needed for ElevenLabs TTS
+
+# Logging Commands
+rotate-logs: ## Rotate log files (current -> .old)
+	@echo "Rotating log files..."
+	@uv run python3 -c "from backend.utils.logging_config import rotate_logs; rotate_logs()"
+
+tail-logs: ## Follow all service logs
+	@echo "Following all service logs (Ctrl+C to stop)..."
+	@mkdir -p logs
+	@touch logs/backend.log logs/data_service.log logs/frontend.log
+	@tail -f logs/backend.log logs/data_service.log logs/frontend.log
+
+tail-backend: ## Follow backend logs
+	@echo "Following backend logs (Ctrl+C to stop)..."
+	@mkdir -p logs
+	@touch logs/backend.log
+	@tail -f logs/backend.log
+
+tail-data-service: ## Follow data service logs
+	@echo "Following data service logs (Ctrl+C to stop)..."
+	@mkdir -p logs
+	@touch logs/data_service.log
+	@tail -f logs/data_service.log
+
+tail-frontend: ## Follow frontend logs
+	@echo "Following frontend logs (Ctrl+C to stop)..."
+	@mkdir -p logs
+	@touch logs/frontend.log
+	@tail -f logs/frontend.log
+
+tail-conversations: ## Follow conversation logs
+	@echo "Following conversation logs (Ctrl+C to stop)..."
+	@mkdir -p logs
+	@touch logs/conversations.log
+	@tail -f logs/conversations.log
+
+show-conversations: ## Show recent conversation logs
+	@echo "=== CONVERSATION LOGS ==="
+	@tail -n 30 logs/conversations.log 2>/dev/null || echo "No conversation logs found"
+
+show-logs: ## Show recent logs from all services
+	@echo "=== BACKEND LOGS ==="
+	@tail -n 20 logs/backend.log 2>/dev/null || echo "No backend logs found"
+	@echo ""
+	@echo "=== DATA SERVICE LOGS ==="
+	@tail -n 20 logs/data_service.log 2>/dev/null || echo "No data service logs found"
+	@echo ""
+	@echo "=== FRONTEND LOGS ==="
+	@tail -n 20 logs/frontend.log 2>/dev/null || echo "No frontend logs found"
+	@echo ""
+	@echo "=== CONVERSATION LOGS ==="
+	@tail -n 20 logs/conversations.log 2>/dev/null || echo "No conversation logs found"
+
+clean-logs: ## Clean all log files
+	@echo "Cleaning log files..."
+	@rm -f logs/*.log logs/*.log.old
+	@echo "Log files cleaned"
 
 update-deps: ## Update all dependencies
 	@echo "Updating dependencies..."

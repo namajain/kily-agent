@@ -79,6 +79,34 @@ function App() {
       setProcessingMessage(false);
     });
 
+    newSocket.on('voice_transcription', (data) => {
+      console.log('Received voice transcription:', data);
+      setChatHistory(prev => [
+        ...prev,
+        {
+          type: 'user',
+          content: data.transcribed_text,
+          timestamp: data.timestamp,
+          input_method: 'voice'
+        }
+      ]);
+      // Keep processing message true until AI response is received
+    });
+
+    newSocket.on('voice_response', (data) => {
+      console.log('Received voice response:', data);
+      setChatHistory(prev => [
+        ...prev,
+        {
+          type: 'assistant',
+          content: data.response,
+          timestamp: data.timestamp,
+          voice_response: data.voice_response
+        }
+      ]);
+      setProcessingMessage(false);
+    });
+
     setSocket(newSocket);
 
     return () => {
@@ -182,6 +210,24 @@ function App() {
     });
   };
 
+  // Handle voice message
+  const handleVoiceMessage = (voiceData) => {
+    if (!socket || !connected || !chatSession) {
+      setError('Not connected or no active session');
+      return;
+    }
+
+    // Set processing state
+    setProcessingMessage(true);
+
+    // Send voice message to backend
+    socket.emit('voice_message', {
+      session_id: chatSession.session_id,
+      audio_data: voiceData.audio_data,
+      voice_id: voiceData.voice_id
+    });
+  };
+
   return (
     <Router>
       <div className="min-h-screen bg-gray-50">
@@ -211,10 +257,12 @@ function App() {
                 profile={selectedProfile}
                 chatHistory={chatHistory}
                 onSendMessage={sendMessage}
+                onVoiceMessage={handleVoiceMessage}
                 session={chatSession}
                 connected={connected}
                 loading={loading}
                 processingMessage={processingMessage}
+                socket={socket}
               />
             ) : (
               <div className="text-center py-12">

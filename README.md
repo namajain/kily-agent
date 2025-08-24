@@ -14,6 +14,34 @@ This is the MVP (Minimum Viable Product) implementation of the Enhanced QnA Agen
 - **Database Integration**: PostgreSQL for persistent storage
 - **File Organization**: Date-based file structure (`downloads/YYYY-MM-DD/profile_id/`)
 
+### 🎙️ Voice Integration Features
+- **Voice Input (STT)**: ElevenLabs Speech-to-Text integration for voice queries
+- **Voice Output (TTS)**: ElevenLabs Text-to-Speech with natural voice responses
+- **Markdown Cleaning**: Automatic removal of markdown formatting before TTS
+- **Voice UI**: Microphone recording and audio playback controls
+- **Transcription Display**: Shows actual transcribed text in chat interface
+
+### 📊 Enhanced Chat Features
+- **Conversational AI**: Context-aware responses alongside data analysis
+- **Chat History**: Persistent session storage and retrieval
+- **Continue Chat**: Resume previous conversations without session recreation
+- **Loading States**: Visual feedback during message processing
+- **Voice Indicators**: Clear distinction between voice and text input methods
+- **Markdown Rendering**: Rich text formatting for AI responses with headers, bold, italic, code blocks, and tables
+
+### 🔄 Advanced Processing
+- **Iterative Code Execution**: Multi-step analysis with self-correction (up to 5 iterations)
+- **Execution Context**: LLM reviews code output/errors and refines approach
+- **Error Recovery**: Automatic retry logic for failed analysis steps
+- **Prompt Management**: Externalized LLM prompts in dedicated `prompts/` directory
+
+### 📝 Comprehensive Logging
+- **Service Logs**: Separate log files for backend, data service, and frontend
+- **Log Rotation**: Automatic archiving of old logs with timestamps
+- **Conversation Logs**: Dedicated logging for AI interactions in both text and JSON formats
+- **Voice Activity Logs**: Tracks STT, TTS, and voice requests (without storing audio data)
+- **Verbosity Control**: Console logs (WARNING+) vs detailed file logs (DEBUG+)
+
 ### 🔄 Workflow
 1. User selects a profile from the frontend
 2. Backend creates session and downloads context files (if needed)
@@ -89,6 +117,7 @@ This separation provides:
 - Python 3.9+
 - PostgreSQL 13+ (see installation steps below)
 - OpenAI API key
+- ElevenLabs API key (for voice features)
 - uv (Python package manager)
 
 ### PostgreSQL Installation
@@ -113,6 +142,18 @@ createdb qna_agent
 - Download from: https://www.postgresql.org/download/
 - Follow the installation wizard
 - Create a database named `qna_agent`
+
+### Frontend Dependencies
+
+The React frontend includes additional dependencies for enhanced functionality:
+
+```bash
+# Voice and UI dependencies (automatically installed)
+react-markdown    # Markdown rendering for AI responses
+lucide-react      # Modern icon library
+socket.io-client  # Real-time communication
+axios            # HTTP client for API calls
+```
 
 ### Install uv
 
@@ -227,6 +268,26 @@ make run-react
 - "Show me the trends over time"
 ```
 
+### 5. Voice Features
+- **Voice Input**: Click the microphone button to ask questions using your voice
+- **Voice Output**: Click the speaker button to hear AI responses
+- **Transcription**: See exactly what was transcribed from your voice input
+- **Natural Speech**: AI responses are cleaned of markdown formatting for natural TTS
+
+### 6. Rich Text Display
+- **Markdown Support**: AI responses render with full markdown formatting
+- **Headers**: H1-H6 headers with proper hierarchy and styling
+- **Text Formatting**: Bold, italic, code blocks, and inline code
+- **Lists**: Ordered and unordered lists with proper indentation
+- **Tables**: Responsive table layouts for data presentation
+- **Links**: External links with proper styling and security
+
+### 7. Logging and Monitoring
+- **Service Logs**: Monitor all services with `make tail-logs`
+- **Individual Logs**: Use `make tail-backend`, `make tail-data-service`, `make tail-frontend`
+- **Conversation Logs**: View AI interactions with `make tail-conversations`
+- **Log Rotation**: Old logs are automatically archived with timestamps
+
 ## Project Structure
 
 ```
@@ -237,7 +298,10 @@ make run-react
 │   │   ├── context_manager.py    # File download and caching
 │   │   └── session_manager.py    # Session lifecycle management
 │   ├── utils/
-│   │   └── prompt_manager.py     # LLM prompt management
+│   │   ├── prompt_manager.py     # LLM prompt management
+│   │   ├── voice_service.py      # ElevenLabs voice integration
+│   │   ├── logging_config.py     # Centralized logging configuration
+│   │   └── conversation_logger.py # AI conversation logging
 │   ├── core/
 │   └── server.py                 # Socket.IO backend server
 ├── prompts/                      # LLM prompt templates
@@ -250,6 +314,12 @@ make run-react
 ├── frontend-react/               # Modern React frontend
 │   ├── src/
 │   │   ├── components/           # React components
+│   │   │   ├── ChatInterface.js  # Main chat UI
+│   │   │   ├── VoiceInput.js     # Voice recording component
+│   │   │   ├── VoiceOutput.js    # Audio playback component
+│   │   │   ├── MarkdownRenderer.js # Markdown rendering component
+│   │   │   ├── Sidebar.js        # Profile and chat history
+│   │   │   └── ChatHistory.js    # Chat history management
 │   │   ├── App.js               # Main React app
 │   │   └── index.js             # React entry point
 │   ├── package.json             # Node.js dependencies
@@ -263,8 +333,17 @@ make run-react
 │   └── schema.sql               # Database schema
 ├── scripts/
 │   ├── start_backend.py         # Backend startup script
+│   ├── start_frontend_with_logging.py # Frontend with log capture
 │   ├── setup_uv.py              # Python setup script
-│   └── setup_react_frontend.py  # React setup script
+│   ├── setup_react_frontend.py  # React setup script
+│   └── test_voice_service.py    # Voice service testing
+├── logs/                        # Service logs directory
+│   ├── backend.log              # Backend service logs
+│   ├── data_service.log         # Data service logs
+│   ├── frontend.log             # Frontend logs
+│   ├── conversations.log        # AI conversation logs (text)
+│   ├── conversations.json       # AI conversation logs (structured)
+│   └── *.log.old               # Archived log files
 ├── tests/                       # Test files
 ├── pyproject.toml               # Python project configuration
 ├── Makefile                     # Development convenience commands
@@ -290,8 +369,14 @@ DB_PASSWORD=your_password
 # OpenAI Configuration
 OPENAI_API_KEY=your_openai_api_key
 
+# ElevenLabs Configuration (for voice features)
+ELEVENLABS_API_KEY=your_elevenlabs_api_key
+
 # Server Configuration
 FLASK_ENV=development
+
+# Logging Configuration
+LOG_LEVEL=INFO
 ```
 
 ### Database Schema
@@ -581,13 +666,76 @@ uv run pytest tests/ --cov=backend --cov=frontend
    - Verify data source URLs in database
    - Check file permissions in downloads directory
 
+5. **Voice Feature Issues**
+   - Verify `ELEVENLABS_API_KEY` is set in `.env`
+   - Check microphone permissions in browser
+   - Ensure stable internet connection for ElevenLabs API
+   - Review voice service logs for API errors
+   - Test with `scripts/test_voice_service.py`
+
+6. **Logging Issues**
+   - Check `logs/` directory exists and is writable
+   - Verify log rotation permissions
+   - Use `make clean-logs` to reset log files
+   - Check `LOG_LEVEL` environment variable
+
+7. **Frontend Rendering Issues**
+   - Ensure `react-markdown` is installed: `npm install react-markdown`
+   - Check browser console for JavaScript errors
+   - Verify markdown content is properly formatted
+   - Clear browser cache if styling issues persist
+
+### Development Commands
+
+The `Makefile` provides convenient commands for development:
+
+**Service Management:**
+```bash
+make run-all          # Start all services with logging
+make stop-all         # Stop all running services
+make rerun            # Restart all services
+```
+
+**Individual Services:**
+```bash
+make run-backend      # Start backend only
+make run-data-service # Start data service only
+make run-react        # Start React frontend only
+```
+
+**Logging Commands:**
+```bash
+make tail-logs        # Follow all service logs
+make tail-backend     # Follow backend logs only
+make tail-data-service # Follow data service logs only
+make tail-frontend    # Follow frontend logs only
+make tail-conversations # Follow conversation logs only
+make show-logs        # Show recent logs from all services
+make rotate-logs      # Manually rotate log files
+make clean-logs       # Clean up old log files
+```
+
+**Voice Dependencies:**
+```bash
+make install-voice-deps # Install ElevenLabs dependencies
+```
+
 ### Logs
 
-Backend logs are available in the terminal where you started the backend server. Look for:
-- Connection events
-- Download progress
-- Analysis execution
-- Error messages
+Comprehensive logging system with multiple log files:
+
+**Service Logs:**
+- `logs/backend.log` - Backend service events and errors
+- `logs/data_service.log` - Data service operations  
+- `logs/frontend.log` - React frontend compilation and runtime
+- `logs/conversations.log` - AI conversation interactions (human-readable)
+- `logs/conversations.json` - AI conversation interactions (structured)
+
+**Log Features:**
+- Automatic log rotation with timestamp archiving
+- Console logs show WARNING+ messages only
+- File logs capture DEBUG+ for detailed troubleshooting
+- Voice activity logged without storing sensitive audio data
 
 ## Next Steps (v2)
 

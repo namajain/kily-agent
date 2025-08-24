@@ -61,5 +61,122 @@
     "created_at": "2025-08-17T16:15:18.961602",
     "last_activity": "2025-08-17T16:15:36.908862",
     "is_active": true
+  },
+  "dfb8ed6e-ffe3-4a6e-a019-a52c8ed161e1": {
+    "session_id": "dfb8ed6e-ffe3-4a6e-a019-a52c8ed161e1",
+    "user_id": "user1",
+    "profile_id": "profile2",
+    "chat_id": "c786882e-cf9f-4d16-b962-ebd5f2fd355e",
+    "created_at": "2025-08-23T18:20:02.315263",
+    "last_activity": "2025-08-23T18:20:02.315271",
+    "is_active": true
+  },
+  "141ff0b7-eaa6-4e78-8daa-c3e4dcd379b4": {
+    "session_id": "141ff0b7-eaa6-4e78-8daa-c3e4dcd379b4",
+    "user_id": "user1",
+    "profile_id": "profile2",
+    "chat_id": "04251cdb-fb4c-428a-9830-3787305c61f3",
+    "created_at": "2025-08-23T18:25:09.404729",
+    "last_activity": "2025-08-23T18:25:09.404788",
+    "is_active": true
+  },
+  "8ce4943e-a583-4c77-98d9-bbc49c06408a": {
+    "session_id": "8ce4943e-a583-4c77-98d9-bbc49c06408a",
+    "user_id": "user1",
+    "profile_id": "profile2",
+    "chat_id": "9608ad18-37c8-42b2-93e8-0a6fd93980b0",
+    "created_at": "2025-08-23T18:25:18.396994",
+    "last_activity": "2025-08-23T18:25:38.859798",
+    "is_active": true
+  },
+  "897aca6a-1a1e-46e1-b3af-4951f0b02d30": {
+    "session_id": "897aca6a-1a1e-46e1-b3af-4951f0b02d30",
+    "user_id": "user1",
+    "profile_id": "profile2",
+    "chat_id": "e60725bf-27f8-4751-affc-c5fbddb35cc5",
+    "created_at": "2025-08-23T18:44:12.811027",
+    "last_activity": "2025-08-23T18:45:07.920224",
+    "is_active": true
+  },
+  "fa6fb5f8-1b72-4086-a4b7-26b768a0d2e4": {
+    "session_id": "fa6fb5f8-1b72-4086-a4b7-26b768a0d2e4",
+    "user_id": "user1",
+    "profile_id": "profile1",
+    "chat_id": "798b4a91-1688-43c2-84eb-3b758c7014f5",
+    "created_at": "2025-08-23T18:50:27.576578",
+    "last_activity": "2025-08-23T18:50:27.576584",
+    "is_active": true
+  },
+  "555940fd-a746-4b2d-ac56-fe9deded40b8": {
+    "session_id": "555940fd-a746-4b2d-ac56-fe9deded40b8",
+    "user_id": "user1",
+    "profile_id": "profile1",
+    "chat_id": "53a85651-7910-4d7a-8de2-8f68d479a8e4",
+    "created_at": "2025-08-23T18:50:33.775370",
+    "last_activity": "2025-08-23T18:50:55.954380",
+    "is_active": true
+  },
+  "fdccb83a-0af7-4209-aff5-863efd22e22b": {
+    "session_id": "fdccb83a-0af7-4209-aff5-863efd22e22b",
+    "user_id": "user1",
+    "profile_id": "profile1",
+    "chat_id": "c5fa0155-034f-4ddb-9f6c-b5e96eee012d",
+    "created_at": "2025-08-23T19:00:17.592850",
+    "last_activity": "2025-08-23T19:01:11.959942",
+    "is_active": true
+  },
+  "ae73e031-2e36-4b5e-b72b-1db0b529d9e0": {
+    "session_id": "ae73e031-2e36-4b5e-b72b-1db0b529d9e0",
+    "user_id": "user1",
+    "profile_id": "profile1",
+    "chat_id": "4a4b7372-1576-4c27-ad44-a01a4bb31381",
+    "created_at": "2025-08-23T19:11:02.566226",
+    "last_activity": "2025-08-23T19:11:29.301489",
+    "is_active": true
+  },
+  "63f72dc8-3570-43d2-9e89-578cbbf8a696": {
+    "session_id": "63f72dc8-3570-43d2-9e89-578cbbf8a696",
+    "user_id": "user1",
+    "profile_id": "profile1",
+    "chat_id": "709dde4e-4776-4f23-bd63-3bc8c5c6679e",
+    "created_at": "2025-08-23T19:14:22.980873",
+    "last_activity": "2025-08-23T19:14:43.477901",
+    "is_active": true
+  },
+  "075ef79f-b697-4d1b-a055-da131400ef6e": {
+    "session_id": "075ef79f-b697-4d1b-a055-da131400ef6e",
+    "user_id": "user1",
+    "profile_id": "profile1",
+    "chat_id": "773f6051-2d3f-4f17-93f3-a6f01d610e25",
+    "created_at": "2025-08-24T16:56:27.761891",
+    "last_activity": "2025-08-24T16:56:47.751747",
+    "is_active": true
+  },
+  "9f4e8053-fcdf-4a9b-929b-0736a8cc0318": {
+    "session_id": "9f4e8053-fcdf-4a9b-929b-0736a8cc0318",
+    "user_id": "user1",
+    "profile_id": "profile2",
+    "chat_id": "7935147c-16d8-48bb-991e-1ccf397c3f85",
+    "created_at": "2025-08-24T16:57:27.937733",
+    "last_activity": "2025-08-24T16:58:17.953095",
+    "is_active": true
+  },
+  "83d4460c-0885-4fa9-8463-89154b77787f": {
+    "session_id": "83d4460c-0885-4fa9-8463-89154b77787f",
+    "user_id": "user1",
+    "profile_id": "profile2",
+    "chat_id": "b01ebd6c-4b16-4192-a118-7e1a46020f53",
+    "created_at": "2025-08-24T17:06:38.249828",
+    "last_activity": "2025-08-24T17:07:08.146983",
+    "is_active": true
+  },
+  "ab6a2a22-f323-4d2b-83d6-0abf1f139f95": {
+    "session_id": "ab6a2a22-f323-4d2b-83d6-0abf1f139f95",
+    "user_id": "user1",
+    "profile_id": "profile2",
+    "chat_id": "663c075d-7183-4a04-a87b-7919e3e6180b",
+    "created_at": "2025-08-24T17:12:50.208042",
+    "last_activity": "2025-08-24T17:13:16.227244",
+    "is_active": true
   }
 }

@@ -71,7 +71,7 @@ class QnAAgent:
             # Generate conversational response
             conversational_response = self._generate_conversational_response(query, result, context_data, chat_history)
             
-            logger.info("Analysis completed successfully")
+            logger.debug("Analysis completed successfully")
             return conversational_response
             
         except Exception as e:
@@ -200,10 +200,10 @@ class QnAAgent:
                 # Create clean variable name (remove .csv extension and replace with underscore)
                 clean_name = filename.replace('.csv', '_df')
                 local_vars[clean_name] = df
-                logger.info(f"Added dataframe: {clean_name} = {filename}")
+                logger.debug(f"Added dataframe: {clean_name} = {filename}")
             
-            logger.info(f"Available variables: {list(local_vars.keys())}")
-            logger.info(f"Context data keys: {list(context_data.keys())}")
+            logger.debug(f"Available variables: {list(local_vars.keys())}")
+            logger.debug(f"Context data keys: {list(context_data.keys())}")
             
             # Capture output
             output_buffer = []

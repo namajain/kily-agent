@@ -11,6 +11,11 @@ from dotenv import load_dotenv
 # Import chat storage
 from chat_storage import ChatStorage
 
+# Import logging config from parent directory
+import sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from backend.utils.logging_config import setup_service_logging
+
 # Hardcoded data instead of database
 HARDCODED_USERS = {
     "user1": {
@@ -70,12 +75,8 @@ HARDCODED_PROFILES = {
 # Load environment variables
 load_dotenv()
 
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
-logger = logging.getLogger(__name__)
+# Configure logging using centralized config
+logger = setup_service_logging('data_service', log_level=os.getenv('LOG_LEVEL', 'INFO'))
 
 # Create Flask app
 app = Flask(__name__)

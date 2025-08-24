@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { MessageSquare, Clock, User, Calendar } from 'lucide-react';
+import MarkdownRenderer from './MarkdownRenderer';
 
 const ChatHistory = ({ userId, onSelectSession }) => {
   const [sessions, setSessions] = useState([]);
@@ -213,7 +214,13 @@ const ChatHistory = ({ userId, onSelectSession }) => {
                               <User className="h-4 w-4 text-gray-500 flex-shrink-0 mt-0.5" />
                             )}
                             <div className="flex-1">
-                              <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                              {message.type === 'assistant' ? (
+                                <div className="text-sm">
+                                  <MarkdownRenderer content={message.content} />
+                                </div>
+                              ) : (
+                                <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                              )}
                               <p className="text-xs opacity-70 mt-1">
                                 {formatDate(message.timestamp)}
                               </p>

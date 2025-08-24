@@ -4,6 +4,7 @@ Socket.IO Backend Server for MVP - Real-time communication layer
 import os
 import sys
 import logging
+import base64
 from datetime import datetime
 from flask import Flask, request
 from flask_socketio import SocketIO, emit, disconnect
@@ -17,16 +18,15 @@ from .api_client import api_client
 from .managers.context_manager import ContextManager
 from .managers.session_manager import SessionManager
 from .agents.qna_agent import QnAAgent
+from .utils.voice_service import VoiceService
+from .utils.logging_config import setup_service_logging
+from .utils.conversation_logger import ConversationLogger
 
 # Load environment variables
 load_dotenv()
 
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
-logger = logging.getLogger(__name__)
+# Configure logging using centralized config
+logger = setup_service_logging('backend', log_level=os.getenv('LOG_LEVEL', 'INFO'))
 
 class QnABackend:
     """
@@ -43,8 +43,8 @@ class QnABackend:
         self.socketio = SocketIO(
             self.app, 
             cors_allowed_origins="*",
-            logger=True,
-            engineio_logger=True
+            logger=False,
+            engineio_logger=False
         )
         
         # Initialize components
@@ -52,6 +52,15 @@ class QnABackend:
         self.context_manager = ContextManager()
         self.session_manager = SessionManager(self.context_manager)
         self.qna_agent = QnAAgent(self.context_manager)
+        self.conversation_logger = ConversationLogger()
+        
+        # Initialize voice service
+        try:
+            self.voice_service = VoiceService()
+            logger.debug("Voice service initialized successfully")
+        except Exception as e:
+            logger.warning(f"Voice service initialization failed: {e}")
+            self.voice_service = None
         
         # Setup routes
         self.setup_routes()
@@ -168,6 +177,11 @@ class QnABackend:
                     'message': 'Chat session created successfully'
                 })
                 
+                # Log session start
+                self.conversation_logger.log_session_event(session_id, user_id, "session_started", {
+                    "profile_id": profile_id
+                })
+                
                 logger.info(f"Chat session {session_id} created for user {user_id}")
                 
             except Exception as e:
@@ -205,6 +219,12 @@ class QnABackend:
                     'timestamp': datetime.now().isoformat()
                 })
                 
+                # Get user_id from session
+                user_id = session.get('user_id', 'unknown')
+                
+                # Log user message
+                self.conversation_logger.log_user_message(session_id, user_id, message, "text")
+                
                 # Get context data from session
                 context_data = session.get('context_data', {})
                 
@@ -226,6 +246,9 @@ class QnABackend:
                     'content': response,
                     'timestamp': datetime.now().isoformat()
                 })
+                
+                # Log AI response
+                self.conversation_logger.log_ai_response(session_id, user_id, response)
                 
                 # Sync session state to ensure all data is persisted
                 self.session_manager.sync_session_state(session_id)
@@ -378,15 +401,181 @@ class QnABackend:
             except Exception as e:
                 logger.error(f"Failed to restore session: {e}")
                 emit('error', {'message': f'Failed to restore session: {str(e)}'})
-    
-    def _validate_user(self, user_id: str) -> bool:
-        """Validate if user exists via API"""
-        try:
-            user = api_client.get_user(user_id)
-            return user is not None
-        except Exception as e:
-            logger.error(f"Failed to validate user {user_id}: {e}")
-            return False
+        
+        @self.socketio.on('voice_message')
+        def handle_voice_message(data):
+            """Handle voice message input"""
+            try:
+                session_id = data.get('session_id')
+                audio_data = data.get('audio_data')  # Base64 encoded audio
+                voice_id = data.get('voice_id')
+                
+                if not session_id or not audio_data:
+                    emit('error', {'message': 'Session ID and audio data are required'})
+                    return
+                
+                logger.info(f"Processing voice message for session {session_id}")
+                
+                # Decode audio data
+                audio_bytes = base64.b64decode(audio_data)
+                
+                # Convert speech to text using voice service
+                if not self.voice_service:
+                    emit('error', {'message': 'Voice service not available'})
+                    return
+                
+                try:
+                    transcribed_text = self.voice_service.speech_to_text(audio_bytes)
+                except Exception as e:
+                    logger.error(f"Speech-to-text failed: {e}")
+                    emit('error', {'message': 'Failed to transcribe voice message'})
+                    return
+                
+                # Process the transcribed text as a regular message
+                if not self.qna_agent.validate_query(transcribed_text):
+                    emit('error', {'message': 'Invalid query detected in voice message'})
+                    return
+                
+                # Get session
+                session = self.session_manager.get_session(session_id)
+                if not session:
+                    emit('error', {'message': 'Session expired or not found'})
+                    return
+                
+                # Get user_id from session
+                user_id = session.get('user_id', 'unknown')
+                
+                # Add user message to history
+                self.session_manager.add_message(session_id, {
+                    'type': 'user',
+                    'content': transcribed_text,
+                    'timestamp': datetime.now().isoformat(),
+                    'input_method': 'voice'
+                })
+                
+                # Emit transcription immediately after STT
+                emit('voice_transcription', {
+                    'transcribed_text': transcribed_text,
+                    'timestamp': datetime.now().isoformat(),
+                    'session_id': session_id
+                })
+                
+                # Log user voice message with STT output
+                self.conversation_logger.log_user_message(session_id, user_id, transcribed_text, "voice", transcribed_text)
+                
+                # Get context data and chat history
+                context_data = session.get('context_data', {})
+                chat_history = session.get('chat_history', [])
+                formatted_history = []
+                for msg in chat_history:
+                    if msg.get('type') == 'user':
+                        formatted_history.append({'role': 'user', 'content': msg.get('content', '')})
+                    elif msg.get('type') == 'assistant':
+                        formatted_history.append({'role': 'assistant', 'content': msg.get('content', '')})
+                
+                # Process with QnA agent
+                response = self.qna_agent.analyze_with_context(transcribed_text, context_data, formatted_history)
+                
+                # Add assistant response to history
+                self.session_manager.add_message(session_id, {
+                    'type': 'assistant',
+                    'content': response,
+                    'timestamp': datetime.now().isoformat(),
+                    'input_method': 'voice'
+                })
+                
+                # Log AI response
+                self.conversation_logger.log_ai_response(session_id, user_id, response)
+                
+                # Generate voice response if voice service is available
+                voice_response = None
+                if self.voice_service:
+                    try:
+                        voice_audio = self.voice_service.text_to_speech_base64(response, voice_id)
+                        voice_response = {
+                            'audio_data': voice_audio,
+                            'voice_id': voice_id or self.voice_service.default_voice_id
+                        }
+                        
+                        # Log voice request (without the base64 audio)
+                        self.conversation_logger.log_voice_request(
+                            session_id, user_id, response, 
+                            voice_id or self.voice_service.default_voice_id,
+                            len(voice_audio) if voice_audio else None
+                        )
+                        
+                    except Exception as e:
+                        logger.error(f"Voice generation failed: {e}")
+                        self.conversation_logger.log_error(session_id, user_id, "voice_generation", str(e))
+                        # Continue without voice response
+                
+                # Sync session state
+                self.session_manager.sync_session_state(session_id)
+                
+                # Emit AI response separately
+                emit('voice_response', {
+                    'response': response,
+                    'voice_response': voice_response,
+                    'timestamp': datetime.now().isoformat(),
+                    'session_id': session_id
+                })
+                
+                logger.info(f"Voice message processed successfully for session {session_id}")
+                
+            except Exception as e:
+                logger.error(f"Voice message processing failed: {e}")
+                emit('error', {'message': f'Voice processing failed: {str(e)}'})
+        
+        @self.socketio.on('get_available_voices')
+        def handle_get_voices():
+            """Get available ElevenLabs voices"""
+            try:
+                if not self.voice_service:
+                    emit('error', {'message': 'Voice service not available'})
+                    return
+                
+                voices = self.voice_service.get_available_voices()
+                emit('available_voices', {'voices': voices})
+                
+            except Exception as e:
+                logger.error(f"Failed to get available voices: {e}")
+                emit('error', {'message': f'Failed to get voices: {str(e)}'})
+        
+        @self.socketio.on('generate_voice')
+        def handle_generate_voice(data):
+            """Generate voice for text without processing"""
+            try:
+                text = data.get('text')
+                voice_id = data.get('voice_id')
+                
+                if not text:
+                    emit('error', {'message': 'Text is required'})
+                    return
+                
+                if not self.voice_service:
+                    emit('error', {'message': 'Voice service not available'})
+                    return
+                
+                voice_audio = self.voice_service.text_to_speech_base64(text, voice_id)
+                
+                emit('voice_generated', {
+                    'audio_data': voice_audio,
+                    'voice_id': voice_id or self.voice_service.default_voice_id,
+                    'text': text
+                })
+                
+            except Exception as e:
+                logger.error(f"Voice generation failed: {e}")
+                emit('error', {'message': f'Voice generation failed: {str(e)}'})
+        
+        def _validate_user(self, user_id: str) -> bool:
+            """Validate if user exists via API"""
+            try:
+                user = api_client.get_user(user_id)
+                return user is not None
+            except Exception as e:
+                logger.error(f"Failed to validate user {user_id}: {e}")
+                return False
     
     def run(self, host='0.0.0.0', port=5001, debug=False):
         """Run the Socket.IO server"""

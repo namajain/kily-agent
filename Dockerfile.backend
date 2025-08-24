@@ -9,6 +9,7 @@ RUN apt-get update && apt-get install -y \
     gcc \
     postgresql-client \
     curl \
+    # ffmpeg \  # Commented out - not needed for ElevenLabs TTS only
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements and install Python dependencies

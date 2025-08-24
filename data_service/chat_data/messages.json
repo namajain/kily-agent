@@ -54,5 +54,143 @@
       "content": "Sure! Let's break down the performance of keywords for this month and this week.\n\n**This Month's Top Performer:**\nThe highest performing keyword this month is **\"biotin gummies\"**. It achieved an impressive **Return on Ad Spend (ROAS)** of **15.45**. This means that for every dollar spent on advertising, it generated about $15.45 in sales, which is fantastic!\n\n**This Week's Top Performer:**\nFor this week, the standout keyword is **\"hair supplement\"**, which has an even higher ROAS of **91.5**! This indicates that it was extremely effective, bringing in $91.50 for every dollar spent on ads.\n\nIn summary, both keywords are performing well, but \"hair supplement\" is currently leading in terms of return on investment for this week. If you have any more questions or need further insights, feel free to ask!",
       "timestamp": "2025-08-17T16:15:36.890090"
     }
+  ],
+  "8ce4943e-a583-4c77-98d9-bbc49c06408a": [
+    {
+      "type": "user",
+      "content": "Which is the highest performing keyword?",
+      "timestamp": "2025-08-23T18:25:23.716807"
+    },
+    {
+      "type": "assistant",
+      "content": "Sure! Let's break down the performance of keywords for this month and this week.\n\n**This Month's Highest Performing Keyword:**\nThe standout keyword for this month is **\"biotin gummies.\"** Here\u2019s why it\u2019s performing well:\n- It generated **20 clicks** from **41 impressions**, which gives it a high click-through rate (CTR) of about **48.8%**. This means that nearly half the people who saw the ad clicked on it!\n- The cost per click (CPC) is **$0.00**, which is great because it means you\u2019re not paying for each click.\n- It brought in **$2,745 in total sales**, resulting in a remarkable return on ad spend (ROAS) of **15.45**. This means for every dollar spent, you earned about $15.45 back!\n- It also resulted in **4 orders**, which is a solid conversion rate.\n\n**This Week's Highest Performing Keyword:**\nFor this week, the top keyword is **\"hair supplement.\"** Here\u2019s what makes it notable:\n- It had **6 clicks** from **4 impressions**, leading to an impressive CTR of **150%** (which indicates that it was shown multiple times to the same users).\n- The total sales from this keyword were **$549**, with a very high ROAS of **91.5**. This means for every dollar spent, you earned about $91.50 back!\n- However, it didn\u2019t generate any orders this week, which is a bit unusual given the high ROAS.\n\nIn summary, both keywords are performing well, but \"biotin gummies\" is the clear winner for this month, while \"hair supplement\" shows potential with its high ROAS this week. If you have any more questions or need further insights, feel free to ask!",
+      "timestamp": "2025-08-23T18:25:38.848780"
+    }
+  ],
+  "897aca6a-1a1e-46e1-b3af-4951f0b02d30": [
+    {
+      "type": "user",
+      "content": "Voice input detected - STT not yet implemented",
+      "timestamp": "2025-08-23T18:44:20.609043",
+      "input_method": "voice"
+    },
+    {
+      "type": "assistant",
+      "content": "Sure! Let's break down the results from our keyword analysis for this month and this week.\n\n### This Month's Performance:\n- **Total Sales**: We generated a total of **$662,198** in sales this month. That's a solid figure, indicating that our campaigns are performing well.\n- **Total Spend**: We spent about **$287,328** on advertising this month. This gives us a good idea of our investment in driving those sales.\n\n### This Week's Performance:\n- **Total Sales**: For this week, our sales reached **$133,758**. While this is a smaller timeframe, it still shows that we are consistently bringing in revenue.\n- **Total Spend**: Our spending for the week was around **$67,050**. This is a manageable amount compared to our sales, which is a positive sign.\n\n### Key Insights:\n- Both datasets show that there are **no missing values**, which means our data is complete and reliable for analysis.\n- The **Return on Ad Spend (ROAS)** is looking good, especially when we compare the sales to the amount spent. This suggests that our advertising efforts are effective.\n\n### Observations:\n- The **click-through rates (CTR)** and **conversion rates (CVR)** are also important metrics to keep an eye on. They help us understand how well our ads are engaging potential customers and converting them into buyers.\n- It might be useful to look at specific keywords or campaigns that are driving the most sales and clicks, so we can optimize our strategy further.\n\nOverall, the data indicates that our advertising campaigns are performing well, with a healthy balance between sales and spending. If you have any specific areas you'd like to dive deeper into, just let me know!",
+      "timestamp": "2025-08-23T18:44:41.837735",
+      "input_method": "voice"
+    }
+  ],
+  "555940fd-a746-4b2d-ac56-fe9deded40b8": [
+    {
+      "type": "user",
+      "content": "Voice input detected - STT not yet implemented",
+      "timestamp": "2025-08-23T18:50:44.382463",
+      "input_method": "voice"
+    },
+    {
+      "type": "assistant",
+      "content": "Great news! I\u2019ve taken a look at our datasets, and here\u2019s what I found:\n\n### Regions Data\nWe have data on four regions, each with a unique ID, name, manager, and target sales. The regions are:\n- **North** managed by John Smith with a target of $1,000,000\n- **South** managed by Jane Doe with a target of $1,200,000\n- **East** managed by Bob Johnson with a target of $900,000\n- **West** managed by Alice Brown with a target of $1,100,000\n\nThis gives us a good overview of our regional management and sales goals.\n\n### Products Data\nIn our products dataset, we have 100 different products. Each product has an ID, name, category, price, and stock quantity. For example:\n- **Product_1** is an electronic item priced at about $142.62 with 698 units in stock.\n- **Product_2** is a book priced at $49.80 with 964 units available.\n\nThis variety in products helps us understand our inventory and pricing strategy.\n\n### Sales Data\nThe sales dataset is quite extensive, with 1,000 records. It includes details like the date of sale, product ID, quantity sold, unit price, customer ID, region, and total amount. For instance, on April 12, 2024, a sale in the North region involved 8 units of a product, totaling around $2,376.38.\n\n### Missing Values\nI also checked for any missing values in these datasets, and the good news is that there are no missing entries in any of the datasets. This means we have complete data to work with, which is fantastic for our analysis!\n\nOverall, we have a solid foundation of data to analyze our sales performance, product inventory, and regional management. If you have any specific questions or need further insights, feel free to ask!",
+      "timestamp": "2025-08-23T18:50:55.945040",
+      "input_method": "voice"
+    }
+  ],
+  "fdccb83a-0af7-4209-aff5-863efd22e22b": [
+    {
+      "type": "user",
+      "content": "Voice input detected - STT not yet implemented",
+      "timestamp": "2025-08-23T19:00:22.949310",
+      "input_method": "voice"
+    },
+    {
+      "type": "assistant",
+      "content": "Sure! Let's break down the analysis results in a friendly way.\n\nWe have three main datasets: **regions**, **products**, and **sales**. \n\n### Regions\nIn the regions dataset, we have four regions: North, South, East, and West. Each region has a manager and a target sales goal. For example, the South region, managed by Jane Doe, has a target of $1,200,000, while the East region, managed by Bob Johnson, has a target of $900,000. This gives us a good overview of who is responsible for each area and what their sales goals are.\n\n### Products\nNext, we have the products dataset, which includes 100 different products. Each product has a unique ID, a name, a category (like Electronics or Books), a price, and how many are in stock. For instance, Product_1 in the Electronics category is priced at about $142.62 and has 698 units available. This dataset helps us understand what we have to sell and at what price.\n\n### Sales\nFinally, the sales dataset shows us the transactions that have taken place. It includes details like the date of the sale, the product sold, the quantity, the unit price, and the total amount for each sale. For example, on April 12, 2024, a sale in the North region involved 8 units of a product, totaling about $2,376.38.\n\n### Total Sales by Region\nNow, looking at the total sales by region, we can see how each region is performing. The West region leads with approximately $1.68 million in sales, followed closely by the South at about $1.61 million. The North and East regions have total sales of around $1.36 million and $1.67 million, respectively. This information is crucial as it shows which regions are meeting their sales targets and which might need more attention.\n\nOverall, these insights can help us make informed decisions about where to focus our efforts, whether it's boosting sales in a particular region or managing stock levels for certain products. If you have any specific questions or need further analysis, feel free to ask!",
+      "timestamp": "2025-08-23T19:00:40.934585",
+      "input_method": "voice"
+    }
+  ],
+  "ae73e031-2e36-4b5e-b72b-1db0b529d9e0": [
+    {
+      "type": "user",
+      "content": "Which product has the highest stock remaining in the inventory?",
+      "timestamp": "2025-08-23T19:11:18.178350",
+      "input_method": "voice"
+    },
+    {
+      "type": "assistant",
+      "content": "Great news! After checking our inventory, the product with the highest stock remaining is **Product_9**. This product belongs to the **Electronics** category and has a stock quantity of **990 units**. \n\nTo give you a bit more context, it\u2019s priced at approximately **$293.13**. This means we have a good amount of this product available, which is great for meeting customer demand! \n\nIf you have any other questions about our products or inventory, feel free to ask!",
+      "timestamp": "2025-08-23T19:11:23.293664",
+      "input_method": "voice"
+    }
+  ],
+  "63f72dc8-3570-43d2-9e89-578cbbf8a696": [
+    {
+      "type": "user",
+      "content": "Which is the highest priced product?",
+      "timestamp": "2025-08-23T19:14:29.691086",
+      "input_method": "voice"
+    },
+    {
+      "type": "assistant",
+      "content": "The highest priced product in our dataset is **Product_3**, which belongs to the **Electronics** category. It has a price of approximately **$496.37**. This product is quite popular, with a stock quantity of **451** units available.\n\nThis insight is useful for understanding which products might be positioned as premium offerings in your inventory. If you're considering pricing strategies or promotions, knowing which products are at the higher end of the price spectrum can help you target the right audience. If you have any more questions or need further analysis, feel free to ask!",
+      "timestamp": "2025-08-23T19:14:36.033244",
+      "input_method": "voice"
+    }
+  ],
+  "075ef79f-b697-4d1b-a055-da131400ef6e": [
+    {
+      "type": "user",
+      "content": "\u0935\u0949\u091f \u0907\u091c \u0926 \u0939\u093e\u0908\u090f\u0938\u094d\u091f \u0938\u0947\u0932\u093f\u0902\u0917 \u092a\u094d\u0930\u0949\u0921\u0915\u094d\u091f?",
+      "timestamp": "2025-08-24T16:56:34.559795",
+      "input_method": "voice"
+    },
+    {
+      "type": "assistant",
+      "content": "The highest selling product in our sales data is identified as Product ID 98. This product has generated the most sales in terms of quantity sold. \n\nTo give you a clearer picture, this product has a stock quantity of 705, which means we have a good amount available for sale. The sales data shows that it has been quite popular among customers, contributing significantly to our overall sales figures.\n\nIf you're interested, we can also look into how this product's sales compare to others or analyze its performance over time. Let me know what you'd like to explore next!",
+      "timestamp": "2025-08-24T16:56:40.714073",
+      "input_method": "voice"
+    }
+  ],
+  "9f4e8053-fcdf-4a9b-929b-0736a8cc0318": [
+    {
+      "type": "user",
+      "content": "Which is the highest performing keyword by rows.",
+      "timestamp": "2025-08-24T16:57:45.490911",
+      "input_method": "voice"
+    },
+    {
+      "type": "assistant",
+      "content": "Sure! Let's break down the highest performing keywords from both this month and this week.\n\n**This Month's Top Performer:**\nThe keyword \"himalayan shilajit\" has really stood out this month. Here are some key highlights:\n- It generated **1,778 clicks** from **14,110 impressions**, which means it had a decent click-through rate (CTR) of about **12.6%**.\n- The cost per click (CPC) was **$0.00**, indicating that it might have been part of a promotional campaign or had no direct costs associated with clicks.\n- It brought in a total of **$194,148 in sales**, which is impressive!\n- The return on ad spend (ROAS) was **3.63**, meaning for every dollar spent, the campaign earned about $3.63 back.\n\n**This Week's Top Performer:**\nFor this week, the keyword \"shilajit\" took the lead:\n- It achieved **691 clicks** from **9,256 impressions**, resulting in a CTR of about **7.47%**.\n- Similar to the monthly performance, the CPC was also **$0.00**.\n- This keyword generated **$56,448 in sales** this week.\n- The ROAS for this week was **2.10**, indicating a return of $2.10 for every dollar spent.\n\nIn summary, both keywords performed well, with \"himalayan shilajit\" leading for the month and \"shilajit\" being the top performer for the week. The consistent high sales and low CPCs suggest effective targeting and possibly strong demand for these products. If you have any more questions or need further insights, feel free to ask!",
+      "timestamp": "2025-08-24T16:57:57.131539",
+      "input_method": "voice"
+    }
+  ],
+  "83d4460c-0885-4fa9-8463-89154b77787f": [
+    {
+      "type": "user",
+      "content": "Which is the highest performing keyword this week?",
+      "timestamp": "2025-08-24T17:06:47.180132",
+      "input_method": "voice"
+    },
+    {
+      "type": "assistant",
+      "content": "This week, the highest performing keyword is \"shilajit.\" It generated a total of 691 clicks from 9,256 impressions, which gives it a click-through rate (CTR) of about 7.47%. This means that a good number of people who saw the ad clicked on it.\n\nIn terms of sales, \"shilajit\" brought in a total of $56,448, which is quite impressive! The return on ad spend (ROAS) for this keyword is 2.10, meaning that for every dollar spent on advertising, it generated about $2.10 in sales. \n\nThe cost per click (CPC) is reported as $0.00, which might indicate that the ads were running on a cost-effective basis, possibly through organic reach or promotions. Overall, this keyword is performing well, driving significant sales and engagement for the campaign titled \"MM Shilajit Gummies | Gen KW.\"\n\nIf you have any more questions or need further insights, feel free to ask!",
+      "timestamp": "2025-08-24T17:06:54.937161",
+      "input_method": "voice"
+    }
+  ],
+  "ab6a2a22-f323-4d2b-83d6-0abf1f139f95": [
+    {
+      "type": "user",
+      "content": "Which is the highest performing keyword this month by Roaz.",
+      "timestamp": "2025-08-24T17:13:01.748020",
+      "input_method": "voice"
+    },
+    {
+      "type": "assistant",
+      "content": "This month, the standout keyword in terms of Return on Ad Spend (ROAS) is \"biotin gummies,\" which achieved an impressive ROAS of 15.45. This means that for every dollar spent on advertising for this keyword, the return was about $15.45 in sales. \n\nThis high ROAS indicates that the \"biotin gummies\" keyword is not only attracting clicks but also converting those clicks into significant sales, making it a very effective keyword for your advertising efforts this month. \n\nIf you have any more questions or need further insights, feel free to ask!",
+      "timestamp": "2025-08-24T17:13:07.846744",
+      "input_method": "voice"
+    }
   ]
 }
