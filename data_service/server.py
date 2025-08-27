@@ -11,10 +11,8 @@ from dotenv import load_dotenv
 # Import chat storage
 from chat_storage import ChatStorage
 
-# Import logging config from parent directory
-import sys
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from backend.utils.logging_config import setup_service_logging
+# Import local logging config
+from logging_config import setup_service_logging
 
 # Hardcoded data instead of database
 HARDCODED_USERS = {

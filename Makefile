@@ -247,7 +247,7 @@ rsync: ## Sync project to EC2 instance (one-directional, replaces everything)
 		--include='frontend-react/**' \
 		-e "ssh -i nj.pem" \
 		./ \
-		ec2-user@ec2-3-111-213-7.ap-south-1.compute.amazonaws.com:~/ec2_user/
+		ec2-user@ec2-3-111-213-7.ap-south-1.compute.amazonaws.com:~/kily-agent/
 	@echo "✅ Project synced to EC2 instance (replaced everything)!"
 
 rsync-frontend: ## Sync only frontend-react files to EC2 instance
@@ -257,5 +257,5 @@ rsync-frontend: ## Sync only frontend-react files to EC2 instance
 		--exclude='.DS_Store' \
 		-e "ssh -i nj.pem" \
 		frontend-react/ \
-		ec2-user@ec2-3-111-213-7.ap-south-1.compute.amazonaws.com:~/ec2_user/frontend-react/
+		ec2-user@ec2-3-111-213-7.ap-south-1.compute.amazonaws.com:~/kily-agent/frontend-react/
 	@echo "✅ Frontend files synced to EC2 instance!"
