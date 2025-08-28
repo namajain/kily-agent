@@ -1,4 +1,4 @@
-.PHONY: help setup setup-react install test test-rest test-frontend test-data-service test-socketio run-data-service run-backend run-react run-frontend-react run-all stop-all rerun clean format lint rsync rotate-logs tail-logs tail-backend tail-data-service tail-frontend tail-conversations show-logs show-conversations clean-logs
+.PHONY: help setup setup-react install test test-rest test-frontend test-data-service test-socketio run-data-service run-backend run-react run-frontend-react run-all stop-all rerun clean format lint rsync deploy-aws rotate-logs tail-logs tail-backend tail-data-service tail-frontend tail-conversations show-logs show-conversations clean-logs
 
 help: ## Show this help message
 	@echo "Enhanced QnA Agent System - Available Commands:"
@@ -259,3 +259,7 @@ rsync-frontend: ## Sync only frontend-react files to EC2 instance
 		frontend-react/ \
 		ec2-user@ec2-3-111-213-7.ap-south-1.compute.amazonaws.com:~/kily-agent/frontend-react/
 	@echo "✅ Frontend files synced to EC2 instance!"
+
+deploy-aws: ## Deploy to AWS server with proper configuration
+	@echo "🚀 Deploying to AWS server..."
+	@./scripts/deploy_aws.sh

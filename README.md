@@ -606,6 +606,9 @@ make lint
 
 # Clean up generated files
 make clean
+
+# Deploy to AWS
+make deploy-aws
 ```
 
 ### Running Tests

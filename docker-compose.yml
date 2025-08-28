@@ -25,6 +25,7 @@ services:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - ELEVENLABS_API_KEY=${ELEVENLABS_API_KEY}
       - FLASK_ENV=production
+      - SERVER_IP=${SERVER_IP:-localhost}
     ports:
       - "5001:5001"
     depends_on:
@@ -49,8 +50,8 @@ services:
       context: .
       dockerfile: frontend-react/Dockerfile
       args:
-        - REACT_APP_BACKEND_URL=http://localhost:5001
-        - REACT_APP_MOCK_API_URL=http://localhost:5002
+        - REACT_APP_BACKEND_URL=http://${SERVER_IP:-localhost}:5001
+        - REACT_APP_MOCK_API_URL=http://${SERVER_IP:-localhost}:5002
     container_name: kily-frontend
     ports:
       - "80:3000"
