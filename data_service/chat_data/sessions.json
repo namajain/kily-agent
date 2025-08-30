@@ -178,5 +178,14 @@
     "created_at": "2025-08-24T17:12:50.208042",
     "last_activity": "2025-08-24T17:13:16.227244",
     "is_active": true
+  },
+  "1586a056-5215-4536-97f7-5f24d1bff91f": {
+    "session_id": "1586a056-5215-4536-97f7-5f24d1bff91f",
+    "user_id": "user1",
+    "profile_id": "profile1",
+    "chat_id": "d4dc98f9-bd43-48d2-af4e-cce2b6da219b",
+    "created_at": "2025-08-30T16:45:04.465627",
+    "last_activity": "2025-08-30T16:45:04.465635",
+    "is_active": true
   }
 }
